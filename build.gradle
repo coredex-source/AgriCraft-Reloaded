@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id "dev.architectury.loom" version "1.13-SNAPSHOT" apply(false)
+	id "dev.architectury.loom" version "1.14-SNAPSHOT" apply(false)
 	id "architectury-plugin" version "3.4-SNAPSHOT"
 	id "com.github.johnrengelman.shadow" version "7.1.2" apply false
 }
@@ -66,7 +66,7 @@ subprojects {
 			officialMojangMappings()
 			parchment("org.parchmentmc.data:parchment-${minecraft_version}:$parchment_version@zip")
 		}
-		modApi "com.teamresourceful.resourcefulconfig:resourcefulconfig-$name-1.21:$resourcefulconfig_version"
+		modApi "com.teamresourceful.resourcefulconfig:resourcefulconfig-$name-1.21.11:$resourcefulconfig_version"
 
 	}
 
