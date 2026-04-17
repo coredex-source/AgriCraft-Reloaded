@@ -1,0 +1,27 @@
+﻿{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sliver": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "agricraft:netherite_sliver"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "agricraft:netherite_scrap"
+      }
+    }
+  },
+  "requirements": [
+    ["has_sliver", "has_the_recipe"]
+  ],
+  "rewards": {
+    "recipes": ["agricraft:netherite_scrap"]
+  }
+}

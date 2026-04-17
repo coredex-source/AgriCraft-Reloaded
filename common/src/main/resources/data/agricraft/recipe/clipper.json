@@ -1,0 +1,23 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "i": {
+      "tag": "agricraft:ingots/iron"
+    },
+    "r": {
+      "item": "minecraft:shears"
+    },
+    "s": {
+      "tag": "agricraft:rods/wooden"
+    }
+  },
+  "pattern": [
+    " i ",
+    "sr ",
+    " s "
+  ],
+  "result": {
+    "id": "agricraft:clipper"
+  }
+}

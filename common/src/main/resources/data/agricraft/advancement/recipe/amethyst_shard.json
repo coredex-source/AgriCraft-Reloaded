@@ -1,0 +1,27 @@
+﻿{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_petal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "agricraft:amathyllis_petal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "agricraft:amethyst_shard"
+      }
+    }
+  },
+  "requirements": [
+    ["has_petal", "has_the_recipe"]
+  ],
+  "rewards": {
+    "recipes": ["agricraft:amethyst_shard"]
+  }
+}

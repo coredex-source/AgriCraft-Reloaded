@@ -1,0 +1,20 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "l": {
+      "tag": "agricraft:leather"
+    },
+    "s": {
+      "tag": "agricraft:string"
+    }
+  },
+  "pattern": [
+    " s ",
+    "l l",
+    " l "
+  ],
+  "result": {
+    "id": "agricraft:seed_bag"
+  }
+}

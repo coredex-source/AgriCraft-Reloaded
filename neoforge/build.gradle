@@ -9,6 +9,16 @@ base {
 
 loom {
 	accessWidenerPath = project(":common").loom.accessWidenerPath
+
+	runs {
+		data {
+			data()
+			programArgs "--all", "--mod", "agricraft"
+			programArgs "--output", project(":neoforge").file("src/generated/resources").absolutePath
+			programArgs "--existing", project(":common").file("src/main/resources").absolutePath
+			programArgs "--existing", project(":neoforge").file("src/main/resources").absolutePath
+		}
+	}
 }
 
 sourceSets {

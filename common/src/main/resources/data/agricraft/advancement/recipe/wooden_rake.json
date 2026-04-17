@@ -1,0 +1,27 @@
+﻿{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fence": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#agricraft:fences/wooden"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "agricraft:wooden_rake"
+      }
+    }
+  },
+  "requirements": [
+    ["has_fence", "has_the_recipe"]
+  ],
+  "rewards": {
+    "recipes": ["agricraft:wooden_rake"]
+  }
+}

@@ -43,7 +43,8 @@ public class DatagenEventHandler {
 	@SubscribeEvent
 	public static void onGatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		generator.addProvider(event.includeServer(), (DataProvider.Factory<RecipeProvider>) output -> new ModRecipeProvider(output, event.getLookupProvider()));
+		// Recipes are now handwritten in common/src/main/resources/data/agricraft/recipes/ using vanilla 1.21.1 format
+		// generator.addProvider(event.includeServer(), (DataProvider.Factory<RecipeProvider>) output -> new ModRecipeProvider(output, event.getLookupProvider()));
 		BlockTagsProvider blockTagsProvider = generator.addProvider(event.includeServer(), (DataProvider.Factory<BlockTagsProvider>) output -> new ModBlockTagProvider(output, event.getLookupProvider(), AgriApi.MOD_ID, event.getExistingFileHelper()));
 		generator.addProvider(event.includeServer(), (DataProvider.Factory<ItemTagsProvider>) output -> new ModItemTagProvider(output, event.getLookupProvider(), blockTagsProvider.contentsGetter(), AgriApi.MOD_ID, event.getExistingFileHelper()));
 		generator.addProvider(
