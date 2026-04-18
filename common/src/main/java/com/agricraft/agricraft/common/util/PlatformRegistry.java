@@ -1,6 +1,6 @@
 package com.agricraft.agricraft.common.util;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
@@ -12,7 +12,7 @@ public interface PlatformRegistry<T> {
 
 	interface Entry<T> extends Supplier<T> {
 
-		ResourceLocation id();
+		Identifier id();
 
 	}
 

@@ -11,68 +11,29 @@ import com.agricraft.agricraft.common.block.CropBlock;
 import com.agricraft.agricraft.common.block.CropState;
 import com.agricraft.agricraft.common.registry.ModBlocks;
 import com.agricraft.agricraft.common.util.LangUtils;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.Tag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.network.chat.Component;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.entity.SlotAccess;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.inventory.ClickAction;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.Item;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,14 +41,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class SeedBagItem extends Item {
 
 	public static final List<BagSorter> SORTERS = new ArrayList<>();
 	public static final BagSorter DEFAULT_SORTER = new BagSorter() {
 		@Override
-		public ResourceLocation getId() {
-			return ResourceLocation.fromNamespaceAndPath("agricraft", "default");
+		public Identifier getId() {
+			return Identifier.fromNamespaceAndPath("agricraft", "default");
 		}
 
 		@Override
@@ -139,7 +101,7 @@ public class SeedBagItem extends Item {
 		AgriGenome genome = opt.get();
 		if (tag.contains("species")) {
 			// bag already has seeds, we can add seeds only if they have the same species
-			if (!genome.getSpeciesGene().getTrait().equals(tag.getString("species"))) {
+			if (!genome.getSpeciesGene().getTrait().equals(tag.getStringOr("species", ""))) {
 				return 0;
 			}
 		}
@@ -148,7 +110,7 @@ public class SeedBagItem extends Item {
 			tag.put("seeds", new ListTag());
 			tag.putString("species", genome.getSpeciesGene().getTrait());
 		}
-		ListTag seeds = tag.getList("seeds", Tag.TAG_COMPOUND);
+		ListTag seeds = tag.getListOrEmpty("seeds");
 		int size = size(seedBag);
 		if (size >= CoreConfig.seedBagCapacity) {
 			return 0;
@@ -164,8 +126,8 @@ public class SeedBagItem extends Item {
 	}
 
 	public static ItemStack extractFirstStack(ItemStack seedBag) {
-		ListTag seeds = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getList("seeds", Tag.TAG_COMPOUND);
-		BagEntry entry = BagEntry.fromNBT(seeds.getCompound(0));
+		ListTag seeds = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getListOrEmpty("seeds");
+		BagEntry entry = BagEntry.fromNBT(seeds.getCompoundOrEmpty(0));
 		ItemStack seed = AgriSeedItem.toStack(entry.genome);
 		seed.setCount(entry.count);
 		seeds.remove(0);
@@ -177,12 +139,12 @@ public class SeedBagItem extends Item {
 	}
 
 	public static ItemStack extractFirstItem(ItemStack seedBag, boolean simulate) {
-		ListTag seeds = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getList("seeds", Tag.TAG_COMPOUND);
-		CompoundTag seedTag = seeds.getCompound(0);
+		ListTag seeds = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getListOrEmpty("seeds");
+		CompoundTag seedTag = seeds.getCompoundOrEmpty(0);
 		AgriGenome genome = AgriGenome.fromNBT(seedTag);
 		ItemStack seed = AgriSeedItem.toStack(genome);
 		if (!simulate) {
-			int count = seedTag.getInt("count") - 1;
+			int count = seedTag.getIntOr("count", 0) - 1;
 			seedTag.putInt("count", count);
 			if (count <= 0) {
 				seeds.remove(0);
@@ -202,7 +164,7 @@ public class SeedBagItem extends Item {
 		CompoundTag tag = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		int sorterIndex = 0;
 		if (tag.contains("sorter")) {
-			sorterIndex = tag.getInt("sorter");
+			sorterIndex = tag.getIntOr("sorter", 0);
 		}
 		sorterIndex += delta;
 		if (sorterIndex < 0) {
@@ -217,12 +179,12 @@ public class SeedBagItem extends Item {
 		CompoundTag tag = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		int sorterIndex = 0;
 		if (tag.contains("sorter")) {
-			sorterIndex = tag.getInt("sorter");
+			sorterIndex = tag.getIntOr("sorter", 0);
 		}
-		ListTag listTag = tag.getList("seeds", Tag.TAG_COMPOUND);
+		ListTag listTag = tag.getListOrEmpty("seeds");
 		List<BagEntry> entries = new ArrayList<>();
 		for (int i = 0; i < listTag.size(); i++) {
-			entries.add(BagEntry.fromNBT(listTag.getCompound(i)));
+			entries.add(BagEntry.fromNBT(listTag.getCompoundOrEmpty(i)));
 		}
 		BagSorter sorter = SORTERS.get(sorterIndex);
 		entries.sort(sorter);
@@ -239,10 +201,10 @@ public class SeedBagItem extends Item {
 		if (tag == null || !tag.contains("seeds")) {
 			return 0;
 		}
-		ListTag seeds = tag.getList("seeds", Tag.TAG_COMPOUND);
+		ListTag seeds = tag.getListOrEmpty("seeds");
 		int count = 0;
 		for (int i = 0; i < seeds.size(); i++) {
-			count += seeds.getCompound(i).getInt("count");
+			count += seeds.getCompoundOrEmpty(i).getIntOr("count", 0);
 		}
 		return count;
 	}
@@ -358,15 +320,15 @@ public class SeedBagItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag isAdvanced) {
 		if (isEmpty(stack)) {
-			tooltipComponents.add(Component.translatable("agricraft.tooltip.bag.empty").withStyle(ChatFormatting.DARK_GRAY));
+			tooltipAdder.accept(Component.translatable("agricraft.tooltip.bag.empty").withStyle(ChatFormatting.DARK_GRAY));
 		} else {
-			tooltipComponents.add(Component.translatable("agricraft.tooltip.bag.content", size(stack)).append(LangUtils.seedName(stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getString("species"))).withStyle(ChatFormatting.DARK_GRAY));
+			tooltipAdder.accept(Component.translatable("agricraft.tooltip.bag.content", size(stack)).append(LangUtils.seedName(stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getStringOr("species", ""))).withStyle(ChatFormatting.DARK_GRAY));
 		}
-		int i = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getInt("sorter");
+		int i = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getIntOr("sorter", 0);
 		String id = SORTERS.get(i).getId().toString().replace(":", ".");
-		tooltipComponents.add(Component.translatable("agricraft.tooltip.bag.sorter")
+		tooltipAdder.accept(Component.translatable("agricraft.tooltip.bag.sorter")
 				.append(Component.translatable("agricraft.tooltip.bag.sorter." + id))
 				.withStyle(ChatFormatting.DARK_GRAY));
 	}
@@ -376,14 +338,14 @@ public class SeedBagItem extends Item {
 	 */
 	public interface BagSorter extends Comparator<BagEntry> {
 
-		ResourceLocation getId();
+		Identifier getId();
 
 	}
 
 	public record BagEntry(int count, AgriGenome genome) {
 
 		public static BagEntry fromNBT(CompoundTag tag) {
-			return new BagEntry(tag.getInt("count"), AgriGenome.fromNBT(tag));
+			return new BagEntry(tag.getIntOr("count", 0), AgriGenome.fromNBT(tag));
 		}
 
 		public void writeToNBT(CompoundTag tag) {
@@ -396,15 +358,15 @@ public class SeedBagItem extends Item {
 	public static class StatSorter implements BagSorter {
 
 		private final AgriStat stat;
-		private final ResourceLocation id;
+		private final Identifier id;
 
 		public StatSorter(AgriStat stat) {
 			this.stat = stat;
-			this.id = ResourceLocation.fromNamespaceAndPath("agricraft", stat.getId());
+			this.id = Identifier.fromNamespaceAndPath("agricraft", stat.getId());
 		}
 
 		@Override
-		public ResourceLocation getId() {
+		public Identifier getId() {
 			return this.id;
 		}
 

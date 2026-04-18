@@ -2,7 +2,7 @@ package com.agricraft.agricraft.common.util.neoforge;
 
 import com.agricraft.agricraft.common.util.PlatformRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -43,7 +43,7 @@ public class NeoForgeRegistry<T> implements PlatformRegistry<T> {
 		}
 
 		@Override
-		public ResourceLocation id() {
+		public Identifier id() {
 			return this.object.getId();
 		}
 

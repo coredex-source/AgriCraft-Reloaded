@@ -9,7 +9,7 @@ import com.agricraft.agricraft.api.stat.AgriStatRegistry;
 import com.agricraft.agricraft.common.block.CropBlock;
 import com.agricraft.agricraft.common.util.LangUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
@@ -30,7 +30,7 @@ public class AgriCraftJadePlugin implements IWailaPlugin {
 
 		public static final CropBlockComponentProvider INSTANCE = new CropBlockComponentProvider();
 
-		private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "crop_block");
+		private static final Identifier ID = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "crop_block");
 
 		private CropBlockComponentProvider() {
 		}
@@ -51,7 +51,7 @@ public class AgriCraftJadePlugin implements IWailaPlugin {
 								.map(genePair -> Component.translatable("agricraft.tooltip.jade.stat." + genePair.getGene().getId(), genePair.getTrait()))
 								.forEach(iTooltip::add);
 
-						if (crop.getLevel().isClientSide) {
+						if (crop.getLevel().isClientSide()) {
 							// somehow the sky brightness is not updated on tick on the client level
 							crop.getLevel().updateSkyBrightness();
 						}
@@ -78,7 +78,7 @@ public class AgriCraftJadePlugin implements IWailaPlugin {
 		}
 
 		@Override
-		public ResourceLocation getUid() {
+		public Identifier getUid() {
 			return ID;
 		}
 
@@ -88,7 +88,7 @@ public class AgriCraftJadePlugin implements IWailaPlugin {
 
 		public static final SoilComponentProvider INSTANCE = new SoilComponentProvider();
 
-		private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "soil");
+		private static final Identifier ID = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "soil");
 
 		private SoilComponentProvider() {
 		}
@@ -108,7 +108,7 @@ public class AgriCraftJadePlugin implements IWailaPlugin {
 		}
 
 		@Override
-		public ResourceLocation getUid() {
+		public Identifier getUid() {
 			return ID;
 		}
 

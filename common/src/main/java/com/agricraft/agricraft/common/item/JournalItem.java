@@ -12,59 +12,30 @@ import com.agricraft.agricraft.common.item.journal.GrowthReqsPage;
 import com.agricraft.agricraft.common.item.journal.IntroductionPage;
 import com.agricraft.agricraft.common.item.journal.MutationsPage;
 import com.agricraft.agricraft.common.item.journal.PlantPage;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.Tag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.network.chat.Component;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.Item;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class JournalItem extends Item {
 
@@ -73,22 +44,22 @@ public class JournalItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+	public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
 		ItemStack stack = player.getItemInHand(usedHand);
 		if (player.isDiscrete()) {
-			return InteractionResultHolder.pass(stack);
+			return InteractionResult.PASS;
 		}
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			ClientUtil.openJournalScreen(player, usedHand);
-			return InteractionResultHolder.consume(stack);
+			return InteractionResult.CONSUME;
 		}
-		return InteractionResultHolder.pass(stack);
+		return InteractionResult.PASS;
 	}
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Level level = context.getLevel();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return InteractionResult.PASS;
 		}
 		ItemStack heldItem = context.getItemInHand();
@@ -107,15 +78,15 @@ public class JournalItem extends Item {
 	@Override
 	public ItemStack getDefaultInstance() {
 		ItemStack stack = new ItemStack(this);
-//		researchPlant(stack, ResourceLocation.parse("minecraft:wheat"));
+//		researchPlant(stack, Identifier.parse("minecraft:wheat"));
 		return stack;
 	}
 
-	public static void researchPlant(ItemStack journal, ResourceLocation plantId) {
+	public static void researchPlant(ItemStack journal, Identifier plantId) {
 		CompoundTag tag = journal.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		StringTag idTag = StringTag.valueOf(plantId.toString());
 		if (tag.contains("plants")) {
-			ListTag plants = tag.getList("plants", Tag.TAG_STRING);
+			ListTag plants = tag.getListOrEmpty("plants");
 			if (!plants.contains(idTag)) {
 				plants.add(idTag);
 			}
@@ -127,8 +98,8 @@ public class JournalItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-		tooltipComponents.add(Component.translatable("agricraft.tooltip.journal", getResearchedPlants(stack)).withStyle(ChatFormatting.GRAY));
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag isAdvanced) {
+		tooltipAdder.accept(Component.translatable("agricraft.tooltip.journal", getResearchedPlants(stack)).withStyle(ChatFormatting.GRAY));
 	}
 
 	public static JournalData getJournalData(ItemStack journal) {
@@ -140,12 +111,12 @@ public class JournalItem extends Item {
 		if (tag == null || !tag.contains("plants")) {
 			return 0;
 		}
-		return tag.getList("plants", Tag.TAG_STRING).size();
+		return tag.getListOrEmpty("plants").size();
 	}
 
 	public static class Data implements JournalData {
 
-		private final List<ResourceLocation> plants;
+		private final List<Identifier> plants;
 		private final List<JournalPage> pages;
 
 		public Data(ItemStack journalStack) {
@@ -153,15 +124,15 @@ public class JournalItem extends Item {
 			this.pages = new ArrayList<>();
 			CompoundTag tag = journalStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 			if (tag != null && tag.contains("plants")) {
-				ListTag list = tag.getList("plants", Tag.TAG_STRING);
+				ListTag list = tag.getListOrEmpty("plants");
 				for (Tag plantTag : list) {
-					ResourceLocation plantId = ResourceLocation.parse(plantTag.getAsString());
+					Identifier plantId = Identifier.parse(plantTag.asString().orElse(""));
 					if (AgriApi.getPlant(plantId).isPresent()) {
 						plants.add(plantId);
 					}
 				}
 			}
-			this.plants.sort(Comparator.comparing(ResourceLocation::toString));
+			this.plants.sort(Comparator.comparing(Identifier::toString));
 			this.initializePages();
 		}
 
@@ -171,10 +142,10 @@ public class JournalItem extends Item {
 			this.pages.add(new IntroductionPage());
 			this.pages.add(new GeneticsPage());
 			this.pages.add(new GrowthReqsPage());
-			for (ResourceLocation plant : this.plants) {
+			for (Identifier plant : this.plants) {
 				PlantPage plantPage = new PlantPage(plant, plants);
 				this.pages.add(plantPage);
-				List<List<ResourceLocation>> mutations = plantPage.getMutationsOffPage();
+				List<List<Identifier>> mutations = plantPage.getMutationsOffPage();
 				int size = mutations.size();
 				if (size > 0) {
 					int remaining = size;
@@ -204,7 +175,7 @@ public class JournalItem extends Item {
 		}
 
 		@Override
-		public List<ResourceLocation> getDiscoveredSeeds() {
+		public List<Identifier> getDiscoveredSeeds() {
 			return this.plants;
 		}
 

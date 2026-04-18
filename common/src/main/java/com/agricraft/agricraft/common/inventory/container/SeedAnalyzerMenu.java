@@ -12,7 +12,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.entity.player.Inventory;
@@ -56,7 +56,7 @@ public class SeedAnalyzerMenu extends AbstractContainerMenu {
 				// Assuming we did in fact find an AgriCraft Seed, let's add it to the journal research!!
 				if (analyzer.hasJournal() && !agricraftSeed.isEmpty()) {
 					ItemStack journal = analyzer.getJournal();
-					JournalItem.researchPlant(journal, ResourceLocation.parse(AgriSeedItem.getSpecies(agricraftSeed)));
+					JournalItem.researchPlant(journal, Identifier.parse(AgriSeedItem.getSpecies(agricraftSeed)));
 				}
 			}
 

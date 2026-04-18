@@ -19,12 +19,12 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -50,7 +50,7 @@ public class DumpRegistriesCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
 		dispatcher.register(Commands.literal("agricraft_dump")
-				.requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+			.requires(commandSourceStack -> Commands.LEVEL_GAMEMASTERS.check(commandSourceStack.permissions()))
 				.then(Commands.literal("plants").executes(commandContext -> DumpRegistriesCommand.dumpPlants()))
 				.then(Commands.literal("soils").executes(commandContext -> DumpRegistriesCommand.dumpSoils()))
 				.then(Commands.literal("mutations").executes(commandContext -> DumpRegistriesCommand.dumpMutations()))

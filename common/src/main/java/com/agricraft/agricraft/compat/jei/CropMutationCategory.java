@@ -7,20 +7,22 @@ import com.agricraft.agricraft.common.item.AgriSeedItem;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class CropMutationCategory implements IRecipeCategory<AgriMutation> {
 
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "jei/mutation");
+	public static final Identifier ID = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "jei/mutation");
 	public static final RecipeType<AgriMutation> TYPE = new RecipeType<>(ID, AgriMutation.class);
 
-	public static final IDrawable ICON = AgriCraftJeiPlugin.createDrawable(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/item/wooden_crop_sticks.png"), 0, 0, 16, 16, 16, 16);
-	public static final IDrawable BACKGROUND = AgriCraftJeiPlugin.createDrawable(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/jei/crop_mutation.png"), 0, 0, 128, 128, 128, 128);
+	public static final IDrawable ICON = AgriCraftJeiPlugin.createDrawable(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/item/wooden_crop_sticks.png"), 0, 0, 16, 16, 16, 16);
+	public static final IDrawable BACKGROUND = AgriCraftJeiPlugin.createDrawable(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/jei/crop_mutation.png"), 0, 0, 128, 128, 128, 128);
 
 	@Override
 	public RecipeType<AgriMutation> getRecipeType() {
@@ -33,8 +35,13 @@ public class CropMutationCategory implements IRecipeCategory<AgriMutation> {
 	}
 
 	@Override
-	public IDrawable getBackground() {
-		return BACKGROUND;
+	public int getWidth() {
+		return 128;
+	}
+
+	@Override
+	public int getHeight() {
+		return 128;
 	}
 
 	@Override
@@ -73,6 +80,11 @@ public class CropMutationCategory implements IRecipeCategory<AgriMutation> {
 				.setSlotName("output_plant")
 				.setCustomRenderer(PlantIngredient.TYPE, PlantIngredient.RENDERER)
 				.addIngredient(PlantIngredient.TYPE, mutation.getChild().orElse(AgriPlant.NO_PLANT));
+	}
+
+	@Override
+	public void draw(AgriMutation recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+		BACKGROUND.draw(guiGraphics, 0, 0);
 	}
 
 }

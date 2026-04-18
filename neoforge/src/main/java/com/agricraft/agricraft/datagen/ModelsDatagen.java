@@ -1,8 +1,8 @@
 package com.agricraft.agricraft.datagen;
 
-import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ModelProvider;
+import com.agricraft.agricraft.datagen.model.BlockModelBuilder;
+import com.agricraft.agricraft.datagen.model.ItemModelBuilder;
+import com.agricraft.agricraft.datagen.model.ModelProvider;
 
 import java.util.List;
 

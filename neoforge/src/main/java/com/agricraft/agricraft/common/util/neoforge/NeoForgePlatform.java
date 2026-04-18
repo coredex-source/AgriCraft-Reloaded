@@ -15,7 +15,6 @@ import com.agricraft.agricraft.common.util.PlatformRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleType;
@@ -24,7 +23,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
@@ -48,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * NeoForge implementation of {@link Platform}
@@ -96,7 +96,7 @@ public class NeoForgePlatform extends Platform {
 
 	@Override
 	public Optional<RegistryAccess> getRegistryAccess() {
-		if (FMLLoader.getDist().isClient()) {
+		if (FMLLoader.getCurrent().getDist().isClient()) {
 			if (Minecraft.getInstance().level != null) {
 				return Optional.of(Minecraft.getInstance().level.registryAccess());
 			}
@@ -111,39 +111,33 @@ public class NeoForgePlatform extends Platform {
 	@Override
 	public List<Item> getItemsFromLocation(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
-			return List.of(BuiltInRegistries.ITEM.get(tag.id()));
+			return List.of(BuiltInRegistries.ITEM.getValue(tag.id()));
 		} else {
-			return BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, tag.id()))
-					.map(HolderSet.ListBacked::stream)
-					.map(str -> str.map(Holder::value))
-					.map(Stream::toList)
-					.orElse(List.of());
+			return StreamSupport.stream(BuiltInRegistries.ITEM.getTagOrEmpty(TagKey.create(Registries.ITEM, tag.id())).spliterator(), false)
+					.map(Holder::value)
+					.toList();
 		}
 	}
 
 	@Override
 	public List<Block> getBlocksFromLocation(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
-			return List.of(BuiltInRegistries.BLOCK.get(tag.id()));
+			return List.of(BuiltInRegistries.BLOCK.getValue(tag.id()));
 		} else {
-			return BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, tag.id()))
-					.map(HolderSet.ListBacked::stream)
-					.map(str -> str.map(Holder::value))
-					.map(Stream::toList)
-					.orElse(List.of());
+			return StreamSupport.stream(BuiltInRegistries.BLOCK.getTagOrEmpty(TagKey.create(Registries.BLOCK, tag.id())).spliterator(), false)
+					.map(Holder::value)
+					.toList();
 		}
 	}
 
 	@Override
 	public List<Fluid> getFluidsFromLocation(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
-			return List.of(BuiltInRegistries.FLUID.get(tag.id()));
+			return List.of(BuiltInRegistries.FLUID.getValue(tag.id()));
 		} else {
-			return BuiltInRegistries.FLUID.getTag(TagKey.create(Registries.FLUID, tag.id()))
-					.map(HolderSet.ListBacked::stream)
-					.map(str -> str.map(Holder::value))
-					.map(Stream::toList)
-					.orElse(List.of());
+			return StreamSupport.stream(BuiltInRegistries.FLUID.getTagOrEmpty(TagKey.create(Registries.FLUID, tag.id())).spliterator(), false)
+					.map(Holder::value)
+					.toList();
 		}
 	}
 
@@ -158,8 +152,8 @@ public class NeoForgePlatform extends Platform {
 	}
 
 	@Override
-	public ParticleType<?> getParticleType(ResourceLocation particleId) {
-		return BuiltInRegistries.PARTICLE_TYPE.get(particleId);
+	public ParticleType<?> getParticleType(Identifier particleId) {
+		return BuiltInRegistries.PARTICLE_TYPE.getValue(particleId);
 	}
 
 }

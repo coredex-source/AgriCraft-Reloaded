@@ -5,7 +5,6 @@ import com.agricraft.agricraft.api.codecs.AgriSoil;
 import com.agricraft.agricraft.api.tools.magnifying.MagnifyingInspectable;
 import com.agricraft.agricraft.api.tools.magnifying.MagnifyingInspector;
 import com.agricraft.agricraft.common.registry.ModItems;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -46,7 +45,7 @@ public class MagnifyingGlassOverlay {
 		addAllowingPredicate(player -> player.getOffhandItem().is(ModItems.MAGNIFYING_GLASS.get()));
 		addAllowingPredicate(player -> {
 			net.minecraft.world.item.ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
-			return helmet.has(DataComponents.CUSTOM_DATA) && helmet.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getBoolean("magnifying");
+			return helmet.has(DataComponents.CUSTOM_DATA) && helmet.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getBooleanOr("magnifying", false);
 		});
 
 		inspectors.add((level, player, hitResult) -> {
@@ -66,7 +65,7 @@ public class MagnifyingGlassOverlay {
 			Vec3 lookAngle = player.getLookAngle();
 			if (-0.1 <= lookAngle.z && lookAngle.z <= 0.1) {
 				HitResult pick = Minecraft.getInstance().getCameraEntity().pick(100, 0, false);
-				double sunOrientation = level.getTimeOfDay(0);  // angle in circle in [0,1]
+				double sunOrientation = (level.getDayTime() % 24000L) / 24000.0;  // angle in circle in [0,1]
 				double playerOrientation = Math.atan2(lookAngle.x, lookAngle.y) / Math.PI / 2.0;  // angle in a circle in [0,1]
 				// modify the orientation of the player to be in the same system as the sun's
 				if (-0.5 < playerOrientation && playerOrientation < 0) {
@@ -144,9 +143,7 @@ public class MagnifyingGlassOverlay {
 				tooltipHeight += 2; // gap between title lines and next lines
 				tooltipHeight += (tooltip.size() - 1) * 10;
 			}
-			RenderSystem.setShaderColor(1, 1, 1, Mth.clamp(hoverTicks / 24f, 0, 0.8f));
-			graphics.renderTooltip(mc.font, tooltip, Optional.empty(), posX - TooltipRenderUtil.MOUSE_OFFSET, posY - tooltipHeight / 2 + 12);
-			RenderSystem.setShaderColor(1, 1, 1, 1);
+			graphics.setComponentTooltipForNextFrame(mc.font, tooltip, posX - TooltipRenderUtil.MOUSE_OFFSET, posY - tooltipHeight / 2 + 12);
 		}
 
 	}

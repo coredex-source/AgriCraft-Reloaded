@@ -21,7 +21,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.util.RandomSource;
@@ -74,7 +74,7 @@ public class AgriPlant {
 	).apply(instance, AgriPlant::new));
 
 	public static final AgriPlant NO_PLANT = new AgriPlant.Builder().harvest(0).chances(0, 0, 0).build();
-	public static final ResourceLocation UNKNOWN = ResourceLocation.parse("agricraft:unknown");
+	public static final Identifier UNKNOWN = Identifier.parse("agricraft:unknown");
 
 	private final List<String> mods;
 	private final List<AgriSeed> seeds;
@@ -226,7 +226,7 @@ public class AgriPlant {
 		this.particleEffects.stream()
 				.filter(effect -> effect.allowParticles(stage.index()))
 				.forEach(effect -> {
-					ParticleType<?> particle = Platform.get().getParticleType(ResourceLocation.parse(effect.particle()));
+					ParticleType<?> particle = Platform.get().getParticleType(Identifier.parse(effect.particle()));
 					if (!(particle instanceof ParticleOptions)) {
 						return;
 					}

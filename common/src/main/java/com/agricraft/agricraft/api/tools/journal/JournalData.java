@@ -1,6 +1,6 @@
 package com.agricraft.agricraft.api.tools.journal;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -10,6 +10,6 @@ public interface JournalData {
 
 	int size();
 
-	List<ResourceLocation> getDiscoveredSeeds();
+	List<Identifier> getDiscoveredSeeds();
 
 }

@@ -2,19 +2,19 @@ package com.agricraft.agricraft.common.item.journal;
 
 import com.agricraft.agricraft.api.AgriApi;
 import com.agricraft.agricraft.api.tools.journal.JournalPage;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
 public class MutationsPage implements JournalPage {
 
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "mutation_page");
+	public static final Identifier ID = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "mutation_page");
 	public static final int LIMIT = 18;
 
-	private final List<List<ResourceLocation>> mutationsLeft;
-	private final List<List<ResourceLocation>> mutationsRight;
+	private final List<List<Identifier>> mutationsLeft;
+	private final List<List<Identifier>> mutationsRight;
 
-	public MutationsPage(List<List<ResourceLocation>> mutations) {
+	public MutationsPage(List<List<Identifier>> mutations) {
 		int count = mutations.size();
 		if (count <= LIMIT / 2) {
 			this.mutationsLeft = mutations;
@@ -26,15 +26,15 @@ public class MutationsPage implements JournalPage {
 	}
 
 	@Override
-	public ResourceLocation getDrawerId() {
+	public Identifier getDrawerId() {
 		return ID;
 	}
 
-	public List<List<ResourceLocation>> getMutationsLeft() {
+	public List<List<Identifier>> getMutationsLeft() {
 		return this.mutationsLeft;
 	}
 
-	public List<List<ResourceLocation>> getMutationsRight() {
+	public List<List<Identifier>> getMutationsRight() {
 		return this.mutationsRight;
 	}
 

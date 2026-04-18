@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Defines a gene from AgriCraft's genome for plants and seeds
@@ -60,7 +61,7 @@ public interface AgriGene<T> extends AgriRegistrable {
 	 * @param tooltipComponents the list to add the components to
 	 * @param trait             the value of the gene
 	 */
-	void addTooltip(List<Component> tooltipComponents, T trait);
+	void addTooltip(Consumer<Component> tooltipAdder, T trait);
 
 	/**
 	 * @return the dominant color as an argb int

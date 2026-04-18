@@ -7,7 +7,7 @@ import com.agricraft.agricraft.common.util.Platform;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -66,7 +66,7 @@ public record AgriSoil(List<String> mods, List<AgriSoilVariant> variants,
 		tooltip.add(Component.translatable("agricraft.tooltip.magnifying.soil"));
 		tooltip.add(Component.literal("  ")
 				.append(Component.translatable("agricraft.tooltip.magnifying.soil.soil"))
-				.append(LangUtils.soilName(AgriApi.getSoilId(this).map(ResourceLocation::toString).orElse(""))));
+				.append(LangUtils.soilName(AgriApi.getSoilId(this).map(Identifier::toString).orElse(""))));
 		tooltip.add(Component.literal("  ")
 				.append(Component.translatable("agricraft.tooltip.magnifying.soil.humidity"))
 				.append(LangUtils.soilPropertyName("humidity", this.humidity)));

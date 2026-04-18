@@ -7,11 +7,10 @@ import com.agricraft.agricraft.common.util.PlatformClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -30,21 +29,21 @@ public class ClientUtil {
 	}
 
 	public static void spawnParticlesForPlant(String plantModelId, LevelAccessor level, BlockState state, BlockPos pos, VoxelShape voxelShape) {
-		BakedModel model = PlatformClient.get().getStandaloneModel(ResourceLocation.parse(plantModelId));
+		BlockStateModel model = PlatformClient.get().getStandaloneModel(Identifier.parse(plantModelId));
 		spawnParticlesForShape(model, level, state, pos, voxelShape);
 	}
 
 	public static void spawnParticlesForSticks(CropStickVariant variant, LevelAccessor level, BlockState state, BlockPos pos, VoxelShape voxelShape) {
 		String modelId = getModelForSticks(variant);
-		BakedModel model = PlatformClient.get().getStandaloneModel(ResourceLocation.parse(modelId));
+		BlockStateModel model = PlatformClient.get().getStandaloneModel(Identifier.parse(modelId));
 		spawnParticlesForShape(model, level, state, pos, voxelShape);
 	}
 
-	public static void spawnParticlesForShape(BakedModel model, LevelAccessor level, BlockState state, BlockPos pos, VoxelShape voxelShape) {
+	public static void spawnParticlesForShape(BlockStateModel model, LevelAccessor level, BlockState state, BlockPos pos, VoxelShape voxelShape) {
 		if (model == null) {
 			return;
 		}
-		TextureAtlasSprite particleIcon = model.getParticleIcon();
+		TextureAtlasSprite particleIcon = model.particleIcon();
 		if (particleIcon == null) {
 			return;
 		}
@@ -67,7 +66,6 @@ public class ClientUtil {
 						double oz = dz * zBoxes + startZ;
 						TerrainParticle particle = new TerrainParticle((ClientLevel) level, pos.getX() + ox,
 								pos.getY() + oy, pos.getZ() + oz, dx - 0.5, dy - 0.5, dz - 0.5, state, pos);
-						particle.setSprite(particleIcon);
 						Minecraft.getInstance().particleEngine.add(particle);
 					}
 				}

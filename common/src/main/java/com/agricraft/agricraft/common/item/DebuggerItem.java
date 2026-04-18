@@ -20,7 +20,7 @@ public class DebuggerItem extends Item {
 	public InteractionResult useOn(UseOnContext context) {
 		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		System.out.println("side: " + (level.isClientSide?"client":"server"));
+		System.out.println("side: " + (level.isClientSide()?"client":"server"));
 		if (level.getBlockEntity(pos) instanceof SeedAnalyzerBlockEntity analyzer) {
 			System.out.println("  tag: " + analyzer.saveWithoutMetadata(level.registryAccess()));
 			System.out.println("  hasSeed: " + analyzer.hasSeed());

@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class GeneStat implements AgriGene<Integer> {
 
@@ -53,13 +54,13 @@ public class GeneStat implements AgriGene<Integer> {
 
 	@Override
 	public AgriGenePair<Integer> readFromNBT(CompoundTag genes) {
-		CompoundTag stat = genes.getCompound(this.getId());
-		return new AgriGenePair<>(this, this.getAllele(stat.getInt("dom")), this.getAllele(stat.getInt("rec")));
+		CompoundTag stat = genes.getCompoundOrEmpty(this.getId());
+		return new AgriGenePair<>(this, this.getAllele(stat.getIntOr("dom", 0)), this.getAllele(stat.getIntOr("rec", 0)));
 	}
 
 	@Override
-	public void addTooltip(List<Component> tooltipComponents, Integer trait) {
-		this.stat.addTooltip(tooltipComponents::add, trait);
+	public void addTooltip(Consumer<Component> tooltipAdder, Integer trait) {
+		this.stat.addTooltip(tooltipAdder, trait);
 	}
 
 	@Override

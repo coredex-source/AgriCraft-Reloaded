@@ -21,9 +21,10 @@ public class CropSticksItem extends BlockItem {
 	private final CropStickVariant variant;
 
 	public CropSticksItem(Block block, CropStickVariant variant) {
-		super(block, variant == CropStickVariant.IRON || variant == CropStickVariant.OBSIDIAN
+		super(block, (variant == CropStickVariant.IRON || variant == CropStickVariant.OBSIDIAN
 				? new Item.Properties().fireResistant()
-				: new Item.Properties());
+				: new Item.Properties())
+				.overrideDescription("item.agricraft." + variant.getSerializedName() + "_crop_sticks"));
 		this.variant = variant;
 	}
 
@@ -54,14 +55,9 @@ public class CropSticksItem extends BlockItem {
 				ItemStack stack = player.getItemInHand(hand);
 				stack.shrink(1);
 			}
-			return InteractionResult.sidedSuccess(world.isClientSide());
+			return InteractionResult.SUCCESS;
 		}
 		return result;
-	}
-
-	@Override
-	public String getDescriptionId() {
-		return "item.agricraft." + variant.getSerializedName() + "_crop_sticks";
 	}
 
 }

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class RakeItem extends Item {
 
@@ -69,8 +71,8 @@ public class RakeItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-		tooltipComponents.add(Component.translatable("agricraft.tooltip.rake").withStyle(ChatFormatting.DARK_GRAY));
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag isAdvanced) {
+		tooltipAdder.accept(Component.translatable("agricraft.tooltip.rake").withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 }

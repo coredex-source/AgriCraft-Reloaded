@@ -114,11 +114,11 @@ public class AgriGrowthConditionRegistry extends AgriRegistry<AgriGrowthConditio
 				return AgriGrowthResponse.FERTILE;
 			}
 			if (listCondition.blacklist()) {
-				if (listCondition.values().stream().anyMatch(dimension.location()::equals)) {
+				if (listCondition.values().stream().anyMatch(dimension.identifier()::equals)) {
 					return AgriGrowthResponse.INFERTILE;
 				}
 			} else {
-				if (listCondition.values().stream().noneMatch(dimension.location()::equals)) {
+				if (listCondition.values().stream().noneMatch(dimension.identifier()::equals)) {
 					return AgriGrowthResponse.INFERTILE;
 				}
 			}

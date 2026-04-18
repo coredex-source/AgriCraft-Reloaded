@@ -10,7 +10,7 @@ import com.agricraft.agricraft.api.requirement.AgriSeason;
 import com.agricraft.agricraft.api.tools.journal.JournalPage;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -22,21 +22,21 @@ import java.util.stream.Stream;
 
 public class PlantPage implements JournalPage {
 
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "plant_page");
+	public static final Identifier ID = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "plant_page");
 
 	private final AgriPlant plant;
-	private final List<ResourceLocation> researched;
-	private final ResourceLocation plantId;
+	private final List<Identifier> researched;
+	private final Identifier plantId;
 	private final List<ItemStack> products;
-	private final List<List<ResourceLocation>> mutationsOnPage;
-	private final List<List<ResourceLocation>> mutationsOffPage;
+	private final List<List<Identifier>> mutationsOnPage;
+	private final List<List<Identifier>> mutationsOffPage;
 	private final boolean[] brightnessMask;
 	private final boolean[] humidityMask;
 	private final boolean[] acidityMask;
 	private final boolean[] nutrientsMask;
 	private final boolean[] seasonMask;
 
-	public PlantPage(ResourceLocation plantId, List<ResourceLocation> researched) {
+	public PlantPage(Identifier plantId, List<Identifier> researched) {
 		this.plantId = plantId;
 		this.plant = AgriApi.getPlant(plantId).orElse(AgriPlant.NO_PLANT);
 		this.researched = researched;
@@ -63,7 +63,7 @@ public class PlantPage implements JournalPage {
 		}
 		this.products = new ArrayList<>();
 		this.plant.getAllPossibleProducts(products::add);
-		List<List<ResourceLocation>> mutations = Stream.concat(
+		List<List<Identifier>> mutations = Stream.concat(
 				this.gatherMutationSprites(mutation -> mutation.parent1().equals(this.plantId) || mutation.parent2().equals(this.plantId)),
 				this.gatherMutationSprites(mutation -> mutation.child().equals(this.plantId))
 		).collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class PlantPage implements JournalPage {
 	}
 
 	@Override
-	public ResourceLocation getDrawerId() {
+	public Identifier getDrawerId() {
 		return ID;
 	}
 
@@ -86,7 +86,7 @@ public class PlantPage implements JournalPage {
 		return this.plant;
 	}
 
-	public ResourceLocation getPlantId() {
+	public Identifier getPlantId() {
 		return plantId;
 	}
 
@@ -94,11 +94,11 @@ public class PlantPage implements JournalPage {
 		return products;
 	}
 
-	public List<List<ResourceLocation>> getMutationsOnPage() {
+	public List<List<Identifier>> getMutationsOnPage() {
 		return mutationsOnPage;
 	}
 
-	public List<List<ResourceLocation>> getMutationsOffPage() {
+	public List<List<Identifier>> getMutationsOffPage() {
 		return mutationsOffPage;
 	}
 
@@ -122,7 +122,7 @@ public class PlantPage implements JournalPage {
 		return this.seasonMask;
 	}
 
-	protected Stream<List<ResourceLocation>> gatherMutationSprites(Predicate<AgriMutation> filter) {
+	protected Stream<List<Identifier>> gatherMutationSprites(Predicate<AgriMutation> filter) {
 		Optional<Registry<AgriMutation>> optional = AgriApi.getMutationRegistry();
 		if (optional.isEmpty()) {
 			return Stream.empty();
@@ -134,7 +134,7 @@ public class PlantPage implements JournalPage {
 				);
 	}
 
-	protected boolean isPlantKnown(ResourceLocation plant) {
+	protected boolean isPlantKnown(Identifier plant) {
 //		if(AgriCraft.instance.getConfig().progressiveJEI()) {
 		return this.researched.contains(plant);
 //		}

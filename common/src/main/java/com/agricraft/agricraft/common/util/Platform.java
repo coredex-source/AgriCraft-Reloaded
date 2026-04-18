@@ -9,7 +9,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
@@ -25,6 +25,7 @@ import net.minecraft.world.level.material.Fluid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public abstract class Platform {
 
@@ -89,7 +90,7 @@ public abstract class Platform {
 	public abstract Optional<RegistryAccess> getRegistryAccess();
 
 	public <T> Optional<Registry<T>> getRegistry(ResourceKey<Registry<T>> resourceKey) {
-		return this.getRegistryAccess().flatMap(registryAccess -> registryAccess.registry(resourceKey));
+		return this.getRegistryAccess().flatMap(registryAccess -> registryAccess.lookup(resourceKey));
 	}
 
 	public abstract List<Item> getItemsFromLocation(ExtraCodecs.TagOrElementLocation tag);
@@ -98,15 +99,14 @@ public abstract class Platform {
 
 	public abstract List<Fluid> getFluidsFromLocation(ExtraCodecs.TagOrElementLocation tag);
 
-	public Stream<ResourceLocation> getPlantIdsFromTag(ExtraCodecs.TagOrElementLocation tag) {
+	public Stream<Identifier> getPlantIdsFromTag(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
 			return Stream.of(tag.id());
 		} else {
-			return AgriApi.getPlantRegistry().flatMap(registry ->
-							registry.getTag(TagKey.create(AgriApi.AGRIPLANTS, tag.id()))
-									.map(named -> named.stream().map(holder -> registry.getKey(holder.value())))
-					)
-					.orElse(Stream.empty());
+			return AgriApi.getPlantRegistry()
+					.map(registry -> StreamSupport.stream(registry.getTagOrEmpty(TagKey.create(AgriApi.AGRIPLANTS, tag.id())).spliterator(), false)
+							.map(holder -> registry.getKey(holder.value())))
+					.orElseGet(Stream::empty);
 		}
 	}
 
@@ -114,7 +114,7 @@ public abstract class Platform {
 
 	public abstract void openMenu(ServerPlayer player, ExtraDataMenuProvider provider);
 
-	public abstract ParticleType<?> getParticleType(ResourceLocation particleId);
+	public abstract ParticleType<?> getParticleType(Identifier particleId);
 
 	@FunctionalInterface
 	public interface MenuFactory<T extends AbstractContainerMenu> {

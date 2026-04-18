@@ -4,7 +4,6 @@ import com.teamresourceful.resourcefulconfig.api.annotations.Category;
 import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
-import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 
 /**
  * Agricraft mode compatibility configuration category.
@@ -12,15 +11,15 @@ import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 @Category("compat")
 public final class CompatConfig {
 
-	@ConfigEntry(id = "mysticalagriculture", type = EntryType.BOOLEAN, translation = "config.agricraft.compat.mysticalagriculture")
+	@ConfigEntry(id = "mysticalagriculture", translation = "config.agricraft.compat.mysticalagriculture")
 	@Comment("Set to false to disable compatibility with Mystical Agriculture (in case things break)")
 	public static boolean enableMysticalAgriculture = true;
 
-	@ConfigEntry(id = "pneumaticcraft", type = EntryType.BOOLEAN, translation = "config.agricraft.compat.pneumaticcraft")
+	@ConfigEntry(id = "pneumaticcraft", translation = "config.agricraft.compat.pneumaticcraft")
 	@Comment("If true, harvesting drones will be able to harvest AgriCraft crops")
 	public static boolean enablePneumaticCraft = true;
 
-	@ConfigEntry(id = "industrialforegoing", type = EntryType.BOOLEAN, translation = "config.agricraft.compat.industrialforegoing")
+	@ConfigEntry(id = "industrialforegoing", translation = "config.agricraft.compat.industrialforegoing")
 	@Comment("If set to true, plant gatherer will be able to harvest AgriCraft crops")
 	public static boolean enableIndustrialForegoing = true;
 

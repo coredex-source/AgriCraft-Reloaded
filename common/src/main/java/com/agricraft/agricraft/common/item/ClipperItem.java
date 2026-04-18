@@ -11,12 +11,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ClipperItem extends Item {
 
@@ -27,7 +29,7 @@ public class ClipperItem extends Item {
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Level level = context.getLevel();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return InteractionResult.PASS;
 		}
 		BlockPos pos = context.getClickedPos();
@@ -39,7 +41,7 @@ public class ClipperItem extends Item {
 			}
 			if (!plant.allowsClipping(crop.getGrowthStage(), context.getItemInHand(), player)) {
 				if (player != null) {
-					player.sendSystemMessage(Component.translatable("agricraft.message.clipping_impossible"));
+					player.displayClientMessage(Component.translatable("agricraft.message.clipping_impossible"), false);
 				}
 				return InteractionResult.FAIL;
 			}
@@ -55,8 +57,8 @@ public class ClipperItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-		tooltipComponents.add(Component.translatable("agricraft.tooltip.clipper").withStyle(ChatFormatting.DARK_GRAY));
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag isAdvanced) {
+		tooltipAdder.accept(Component.translatable("agricraft.tooltip.clipper").withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 }

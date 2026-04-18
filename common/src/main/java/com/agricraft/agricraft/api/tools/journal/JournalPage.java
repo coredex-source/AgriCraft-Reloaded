@@ -1,9 +1,9 @@
 package com.agricraft.agricraft.api.tools.journal;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface JournalPage {
 
-	ResourceLocation getDrawerId();
+	Identifier getDrawerId();
 
 }

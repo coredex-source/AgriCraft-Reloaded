@@ -4,7 +4,7 @@ import com.agricraft.agricraft.api.AgriApi;
 import com.agricraft.agricraft.api.codecs.AgriMutation;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class MutationsDatagen {
 
@@ -204,7 +204,7 @@ public class MutationsDatagen {
 	}
 
 	private static void r(BootstrapContext<AgriMutation> context, String modid, String mutationId, AgriMutation mutation) {
-		context.register(ResourceKey.create(AgriApi.AGRIMUTATIONS, ResourceLocation.fromNamespaceAndPath(modid, mutationId)), mutation);
+		context.register(ResourceKey.create(AgriApi.AGRIMUTATIONS, Identifier.fromNamespaceAndPath(modid, mutationId)), mutation);
 	}
 
 	private static void mc(BootstrapContext<AgriMutation> context, String mutationId, AgriMutation mutation) {

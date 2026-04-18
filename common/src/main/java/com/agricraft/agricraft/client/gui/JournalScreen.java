@@ -7,15 +7,16 @@ import com.agricraft.agricraft.api.tools.journal.JournalPageDrawers;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 
 public class JournalScreen extends Screen {
 
-	private static final ResourceLocation PAGE_BACKGROUND = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/journal/background.png");
+	private static final Identifier PAGE_BACKGROUND = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/journal/background.png");
 	private static final int PAGE_WIDTH = 292;
 	private static final int PAGE_HEIGHT = 230;
 	private static final int OFFSET_LEFT_PAGE = 8;
@@ -65,7 +66,7 @@ public class JournalScreen extends Screen {
 		super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 		int journalX = (this.width - PAGE_WIDTH) / 2;
 		int journalY = (this.height - PAGE_HEIGHT) / 2;
-		guiGraphics.blit(PAGE_BACKGROUND, journalX, journalY, 0, 0, PAGE_WIDTH, PAGE_HEIGHT, 292, 292);
+		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PAGE_BACKGROUND, journalX, journalY, 0, 0, PAGE_WIDTH, PAGE_HEIGHT, 292, 292);
 	}
 
 	@Override
@@ -113,7 +114,7 @@ public class JournalScreen extends Screen {
 
 
 		@Override
-		public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
 			int xOffset = 0;
 			if (this.isHoveredOrFocused()) {
 				xOffset += 18;
@@ -122,7 +123,7 @@ public class JournalScreen extends Screen {
 			if (this.isPrevious) {
 				yOffset += 10;
 			}
-			guiGraphics.blit(PAGE_BACKGROUND, this.getX(), this.getY(), xOffset, yOffset, ARROW_WIDTH, ARROW_HEIGHT, PAGE_WIDTH, PAGE_WIDTH);
+			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PAGE_BACKGROUND, this.getX(), this.getY(), xOffset, yOffset, ARROW_WIDTH, ARROW_HEIGHT, PAGE_WIDTH, PAGE_WIDTH);
 		}
 
 		@Override

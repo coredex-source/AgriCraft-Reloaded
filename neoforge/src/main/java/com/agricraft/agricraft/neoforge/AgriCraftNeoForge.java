@@ -105,7 +105,17 @@ public class AgriCraftNeoForge {
 	}
 
 	public static void addPack(String type, String modid, PackType packType, AddPackFindersEvent event) {
-		Path resourcePath = ModList.get().getModFileById(AgriApi.MOD_ID).getFile().findResource(type, modid);
+		var resourceUri = ModList.get().getModFileById(AgriApi.MOD_ID)
+				.getFile()
+				.getContents()
+				.findFile(type + "/" + modid);
+		if (resourceUri.isEmpty()) return;
+		Path resourcePath;
+		try {
+			resourcePath = Path.of(resourceUri.get());
+		} catch (Exception ignored) {
+			return;
+		}
 		if (!Files.exists(resourcePath)) return;
 		String id = "builtin/agricraft_" + type + "_" + modid;
 		Pack.ResourcesSupplier resources = new PathPackResources.PathResourcesSupplier(resourcePath);

@@ -34,6 +34,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -63,28 +65,32 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 	}
 
 	@Override
-	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-		super.loadAdditional(tag, registries);
-		boolean hasPlant = tag.getBoolean("hasPlant");
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		boolean hasPlant = input.getBooleanOr("hasPlant", false);
 		if (hasPlant) {
-			this.genome = AgriGenome.fromNBT(tag);
+			input.read("genes", CompoundTag.CODEC).ifPresent(genes -> {
+				CompoundTag temp = new CompoundTag();
+				temp.put("genes", genes);
+				this.genome = AgriGenome.fromNBT(temp);
+			});
 			if (this.genome == null) {
 				this.plantId = "agricraft:unknown";
 			} else {
 				this.plantId = this.genome.getSpeciesGene().getDominant().trait();
 			}
-			int growthIndex = tag.getInt("growthIndex");
-			int growthTotal = tag.getInt("growthTotal");
+			int growthIndex = input.getIntOr("growthIndex", 0);
+			int growthTotal = input.getIntOr("growthTotal", 0);
 			this.growthStage = new AgriGrowthStage(growthIndex, growthTotal);
 			if (plant == null && level != null) {
 				this.plant = AgriApi.getPlant(this.plantId, this.level.registryAccess()).orElse(null);
 			}
 		}
-		boolean hasWeeds = tag.getBoolean("hasWeeds");
+		boolean hasWeeds = input.getBooleanOr("hasWeeds", false);
 		if (hasWeeds) {
-			this.weedId = tag.getString("weedId");
-			int weedGrowthIndex = tag.getInt("weedGrowthIndex");
-			int weedGrowthTotal = tag.getInt("weedGrowthTotal");
+			this.weedId = input.getStringOr("weedId", "");
+			int weedGrowthIndex = input.getIntOr("weedGrowthIndex", 0);
+			int weedGrowthTotal = input.getIntOr("weedGrowthTotal", 0);
 			this.weedGrowthStage = new AgriGrowthStage(weedGrowthIndex, weedGrowthTotal);
 			if (weed == null && level != null) {
 				this.weed = AgriApi.getWeed(this.weedId, this.level.registryAccess()).orElse(null);
@@ -93,23 +99,25 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-		super.saveAdditional(tag, registries);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
 		if (this.hasPlant()) {
-			tag.putBoolean("hasPlant", true);
-			genome.writeToNBT(tag);
-			tag.putInt("growthIndex", this.growthStage.index());
-			tag.putInt("growthTotal", this.growthStage.total());
+			output.putBoolean("hasPlant", true);
+			CompoundTag temp = new CompoundTag();
+			genome.writeToNBT(temp);
+			temp.getCompound("genes").ifPresent(genes -> output.store("genes", CompoundTag.CODEC, genes));
+			output.putInt("growthIndex", this.growthStage.index());
+			output.putInt("growthTotal", this.growthStage.total());
 		} else {
-			tag.putBoolean("hasPlant", false);
+			output.putBoolean("hasPlant", false);
 		}
 		if (this.hasWeeds()) {
-			tag.putBoolean("hasWeeds", true);
-			tag.putString("weedId", this.weedId);
-			tag.putInt("weedGrowthIndex", this.weedGrowthStage.index());
-			tag.putInt("weedGrowthTotal", this.weedGrowthStage.total());
+			output.putBoolean("hasWeeds", true);
+			output.putString("weedId", this.weedId);
+			output.putInt("weedGrowthIndex", this.weedGrowthStage.index());
+			output.putInt("weedGrowthTotal", this.weedGrowthStage.total());
 		} else {
-			tag.putBoolean("hasWeeds", false);
+			output.putBoolean("hasWeeds", false);
 		}
 	}
 
@@ -143,7 +151,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 			if (this.weed != null && this.weedGrowthStage == null) {
 				this.weedGrowthStage = this.weed.getInitialGrowthStage();
 			}
-			if (!level.isClientSide) {
+			if (!level.isClientSide()) {
 				level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
 			}
 		}
@@ -414,7 +422,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 				//There aren't weeds yet, try to spawn new weeds
 				AgriApi.getWeedRegistry().flatMap(registry -> registry.entrySet().stream()
 						.filter(entry -> this.level.getRandom().nextDouble() < entry.getValue().getSpawnChance(this))
-						.findAny()).ifPresent(entry -> this.setWeed(entry.getKey().location().toString(), entry.getValue()));
+						.findAny()).ifPresent(entry -> this.setWeed(entry.getKey().identifier().toString(), entry.getValue()));
 			} else {
 				// There are weeds already, apply the growth tick
 				if (this.weedGrowthStage.isFinal()) {
@@ -540,7 +548,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 			if (isPlayerSneaking) {
 				tooltip.add(Component.literal("  ").append(Component.translatable("agricraft.tooltip.magnifying.growth", this.growthStage.index() + 1, this.growthStage.total())));
 			}
-			if (this.level.isClientSide) {
+			if (this.level.isClientSide()) {
 				// somehow the sky brightness is not updated on tick on the client level
 				this.level.updateSkyBrightness();
 			}

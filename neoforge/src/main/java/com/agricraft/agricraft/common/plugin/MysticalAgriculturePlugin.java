@@ -8,7 +8,7 @@ import com.agricraft.agricraft.common.registry.ModBlocks;
 import com.agricraft.agricraft.common.registry.ModItems;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -27,7 +27,7 @@ public class MysticalAgriculturePlugin {
 			event.register((stack, tintIndex) -> {
 				String species = AgriSeedItem.getSpecies(stack);
 				if (species != null && !species.equals("agricraft:unknown")) {
-					Crop crop = MysticalAgricultureAPI.getCropRegistry().getCropById(ResourceLocation.parse(species));
+					Crop crop = MysticalAgricultureAPI.getCropRegistry().getCropById(Identifier.parse(species));
 					if (crop != null && crop.isSeedColored()) {
 						return crop.getSeedColor();
 					}
@@ -44,7 +44,7 @@ public class MysticalAgriculturePlugin {
 				Optional<AgriCrop> optional = AgriApi.getCrop(level, pos);
 				if (optional.isPresent() && optional.get().hasPlant()) {
 					String species = optional.get().getGenome().getSpeciesGene().getTrait();
-					Crop crop = MysticalAgricultureAPI.getCropRegistry().getCropById(ResourceLocation.parse(species));
+					Crop crop = MysticalAgricultureAPI.getCropRegistry().getCropById(Identifier.parse(species));
 					if (crop != null && crop.isFlowerColored()) {
 						return crop.getFlowerColor();
 					}

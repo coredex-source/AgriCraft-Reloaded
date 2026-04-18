@@ -8,59 +8,31 @@ import com.agricraft.agricraft.api.genetic.AgriGenome;
 import com.agricraft.agricraft.api.genetic.AgriGenomeProviderItem;
 import com.agricraft.agricraft.common.block.CropBlock;
 import com.agricraft.agricraft.common.registry.ModBlocks;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.network.chat.Component;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.Item;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class TrowelItem extends Item implements AgriGenomeProviderItem {
 
@@ -78,7 +50,7 @@ public class TrowelItem extends Item implements AgriGenomeProviderItem {
 	protected InteractionResult tryUseOnCrop(AgriCrop crop, ItemStack heldItem, Player player) {
 		if (crop.hasWeeds()) {
 			if (player != null && player.level().isClientSide()) {
-				player.sendSystemMessage(Component.translatable("agricraft.message.trowel_weed"));
+				player.displayClientMessage(Component.translatable("agricraft.message.trowel_weed"), false);
 			}
 			return InteractionResult.FAIL;
 		} else if (crop.isCrossCropSticks()) {
@@ -98,7 +70,7 @@ public class TrowelItem extends Item implements AgriGenomeProviderItem {
 		}
 		if (this.hasPlant(stack)) {
 			if (player != null) {
-				player.sendSystemMessage(Component.translatable("agricraft.message.trowel_plant"));
+				player.displayClientMessage(Component.translatable("agricraft.message.trowel_plant"), false);
 			}
 			return InteractionResult.FAIL;
 		} else {
@@ -130,7 +102,7 @@ public class TrowelItem extends Item implements AgriGenomeProviderItem {
 			return InteractionResult.SUCCESS;
 		} else {
 			if (player != null) {
-				player.sendSystemMessage(Component.translatable("agricraft.message.trowel_no_plant"));
+				player.displayClientMessage(Component.translatable("agricraft.message.trowel_no_plant"), false);
 			}
 			return InteractionResult.FAIL;
 		}
@@ -194,21 +166,21 @@ public class TrowelItem extends Item implements AgriGenomeProviderItem {
 	public Optional<AgriGrowthStage> getGrowthStage(ItemStack stack) {
 		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		if (tag.contains("growthIndex") && tag.contains("growthTotal")) {
-			int growthIndex = tag.getInt("growthIndex");
-			int growthTotal = tag.getInt("growthTotal");
+			int growthIndex = tag.getIntOr("growthIndex", 0);
+			int growthTotal = tag.getIntOr("growthTotal", 0);
 			return Optional.of(new AgriGrowthStage(growthIndex, growthTotal));
 		}
 		return Optional.empty();
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-		tooltipComponents.add(Component.translatable("agricraft.tooltip.trowel").withStyle(ChatFormatting.DARK_GRAY));
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag isAdvanced) {
+		tooltipAdder.accept(Component.translatable("agricraft.tooltip.trowel").withStyle(ChatFormatting.DARK_GRAY));
 		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		if (tag != null) {
 			AgriGenome genome = AgriGenome.fromNBT(tag);
 			if (genome != null) {
-				genome.appendHoverText(tooltipComponents, TooltipFlag.ADVANCED);
+				genome.appendHoverText(tooltipAdder, TooltipFlag.ADVANCED);
 			}
 		}
 	}

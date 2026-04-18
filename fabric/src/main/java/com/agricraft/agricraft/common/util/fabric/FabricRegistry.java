@@ -2,7 +2,7 @@ package com.agricraft.agricraft.common.util.fabric;
 
 import com.agricraft.agricraft.common.util.PlatformRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
@@ -18,7 +18,7 @@ public class FabricRegistry<T> implements PlatformRegistry<T> {
 
 	@Override
 	public <I extends T> Entry<I> register(String id, Supplier<I> supplier) {
-		ResourceLocation rl = ResourceLocation.fromNamespaceAndPath(modid, id);
+		Identifier rl = Identifier.fromNamespaceAndPath(modid, id);
 		return new FabricRegistryEntry<>(rl, Registry.register(this.registry, rl, supplier.get()));
 	}
 
@@ -29,16 +29,16 @@ public class FabricRegistry<T> implements PlatformRegistry<T> {
 
 	public static class FabricRegistryEntry<T> implements PlatformRegistry.Entry<T> {
 
-		private final ResourceLocation id;
+		private final Identifier id;
 		private final T value;
 
-		public FabricRegistryEntry(ResourceLocation id, T value) {
+		public FabricRegistryEntry(Identifier id, T value) {
 			this.id = id;
 			this.value = value;
 		}
 
 		@Override
-		public ResourceLocation id() {
+		public Identifier id() {
 			return this.id;
 		}
 

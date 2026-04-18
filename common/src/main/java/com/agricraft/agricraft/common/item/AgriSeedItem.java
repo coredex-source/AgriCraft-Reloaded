@@ -16,7 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class AgriSeedItem extends BlockItem implements AgriGenomeProviderItem {
 
@@ -107,7 +109,7 @@ public class AgriSeedItem extends BlockItem implements AgriGenomeProviderItem {
 	public InteractionResult place(BlockPlaceContext context) {
 		InteractionResult result = super.place(context);
 		Level level = context.getLevel();
-		if (result.consumesAction() && !level.isClientSide) {
+		if (result.consumesAction() && !level.isClientSide()) {
 			AgriApi.getCrop(level, context.getClickedPos()).ifPresent(crop -> {
 				if (context.getItemInHand().has(DataComponents.CUSTOM_DATA)) {
 					CompoundTag tag = context.getItemInHand().get(DataComponents.CUSTOM_DATA).copyTag();
@@ -121,7 +123,7 @@ public class AgriSeedItem extends BlockItem implements AgriGenomeProviderItem {
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Level level = context.getLevel();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return InteractionResult.PASS;
 		}
 		ItemStack heldItem = context.getItemInHand();
@@ -180,19 +182,19 @@ public class AgriSeedItem extends BlockItem implements AgriGenomeProviderItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag isAdvanced) {
 		if (stack.has(DataComponents.CUSTOM_DATA)) {
 			CompoundTag tag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
 			AgriGenome genome = AgriGenome.fromNBT(tag);
 			if (genome != null) {
-				genome.appendHoverText(tooltipComponents, isAdvanced);
+				genome.appendHoverText(tooltipAdder, isAdvanced);
 			}
 		}
 	}
 
 //	@Override
 //	public ItemStack getDefaultInstance() {
-//		return AgriApi.getPlant(ResourceLocation.parse("minecraft:wheat")).map(AgriSeedItem::toStack).orElse(super.getDefaultInstance());
+//		return AgriApi.getPlant(Identifier.parse("minecraft:wheat")).map(AgriSeedItem::toStack).orElse(super.getDefaultInstance());
 //	}
 
 }

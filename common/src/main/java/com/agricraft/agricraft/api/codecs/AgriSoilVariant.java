@@ -3,7 +3,7 @@ package com.agricraft.agricraft.api.codecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public record AgriSoilVariant(ExtraCodecs.TagOrElementLocation block, List<Strin
 
 	public static class Builder {
 
-		ExtraCodecs.TagOrElementLocation block = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath("minecraft", "air"), false);
+		ExtraCodecs.TagOrElementLocation block = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath("minecraft", "air"), false);
 		List<String> states = new ArrayList<>();
 
 		public AgriSoilVariant build() {
@@ -45,22 +45,22 @@ public record AgriSoilVariant(ExtraCodecs.TagOrElementLocation block, List<Strin
 		}
 
 		public Builder block(String location) {
-			this.block = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), false);
+			this.block = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), false);
 			return this;
 		}
 
 		public Builder block(String namespace, String path) {
-			this.block = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), false);
+			this.block = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), false);
 			return this;
 		}
 
 		public Builder tag(String location) {
-			this.block = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), true);
+			this.block = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), true);
 			return this;
 		}
 
 		public Builder tag(String namespace, String path) {
-			this.block = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), true);
+			this.block = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), true);
 			return this;
 		}
 

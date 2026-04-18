@@ -44,7 +44,7 @@ public class AgriCraftWthitPlugin implements IWailaPlugin {
                                 .forEach(tooltip::addLine);
                         AgriGrowthResponse response = crop.getFertilityResponse();
                         tooltip.addLine(Component.translatable("agricraft.tooltip.magnifying.requirement." + (response.isLethal() ? "lethal" : response.isFertile() ? "fertile" : "not_fertile")));
-                        if (crop.getLevel().isClientSide) {
+                        if (crop.getLevel().isClientSide()) {
                             // somehow the sky brightness is not updated on tick on the client level
                             crop.getLevel().updateSkyBrightness();
                         }

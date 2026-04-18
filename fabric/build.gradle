@@ -31,7 +31,7 @@ dependencies {
 //	modCompileOnly "mezz.jei:jei-$minecraft_version-fabric-api:$jei_version"
 //	modRuntimeOnly "mezz.jei:jei-$minecraft_version-fabric:$jei_version"
 
-	modLocalRuntime "dev.emi:emi-fabric:$emi_version"
+//	modLocalRuntime "cc.cassian.rrv:reliable-recipe-viewer-fabric:${rrv_version}+${minecraft_version}"
 
 	//modRuntimeOnly "curse.maven:jade-324717:4978962"  // Jade-1.20.4-fabric-13.2.1
 	//modCompileOnly "curse.maven:jade-324717:4980187"  // Jade-1.20.4-fabric-13.2.1-api

@@ -3,7 +3,7 @@ package com.agricraft.agricraft.api.codecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 
@@ -39,7 +39,7 @@ public record AgriProduct(ExtraCodecs.TagOrElementLocation item, CompoundTag nbt
 	}
 
 	public static class Builder {
-		ExtraCodecs.TagOrElementLocation item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath("minecraft", "air"), false);
+		ExtraCodecs.TagOrElementLocation item = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath("minecraft", "air"), false);
 		CompoundTag nbt = new CompoundTag();
 		int min = 1;
 		int max = 3;
@@ -51,19 +51,19 @@ public record AgriProduct(ExtraCodecs.TagOrElementLocation item, CompoundTag nbt
 		}
 
 		public Builder item(String location) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), false);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), false);
 			return this;
 		}
 		public Builder item(String namespace, String path) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), false);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), false);
 			return this;
 		}
 		public Builder tag(String location) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), true);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), true);
 			return this;
 		}
 		public Builder tag(String namespace, String path) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), true);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), true);
 			return this;
 		}
 		public Builder nbt(CompoundTag nbt) {

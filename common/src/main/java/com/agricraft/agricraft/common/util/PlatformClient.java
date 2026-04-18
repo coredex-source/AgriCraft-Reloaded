@@ -1,11 +1,7 @@
 package com.agricraft.agricraft.common.util;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.resources.Identifier;
 
 public abstract class PlatformClient {
 	private static PlatformClient platform = null;
@@ -20,8 +16,6 @@ public abstract class PlatformClient {
 		return PlatformClient.platform;
 	}
 
-	public abstract void renderItem(BakedModel model, ItemStack stack, ItemDisplayContext itemDisplayContext, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay);
-
-	public abstract BakedModel getStandaloneModel(ResourceLocation id);
+	public abstract BlockStateModel getStandaloneModel(Identifier id);
 
 }

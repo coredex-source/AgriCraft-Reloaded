@@ -18,10 +18,10 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -49,21 +49,21 @@ public class GiveSeedCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
 		dispatcher.register(Commands.literal("agricraft_seed")
-				.requires(commandSourceStack -> commandSourceStack.hasPermission(2))
-				.then(Commands.argument("plant", ResourceLocationArgument.id())
+			.requires(commandSourceStack -> Commands.LEVEL_GAMEMASTERS.check(commandSourceStack.permissions()))
+				.then(Commands.argument("plant", IdentifierArgument.id())
 						.suggests(SUGGEST_PLANTS)
 						// give a seed with default stats (1 to all)
-						.executes(commandContext -> GiveSeedCommand.giveSeed(commandContext.getSource(), ResourceLocationArgument.getId(commandContext, "plant")))
+						.executes(commandContext -> GiveSeedCommand.giveSeed(commandContext.getSource(), IdentifierArgument.getId(commandContext, "plant")))
 						// give a seed with the same given value to all stats
 						.then(Commands.literal("all")
 								.then(Commands.argument("count", IntegerArgumentType.integer(1, 10))
-										.executes(commandContext -> GiveSeedCommand.giveSeed(commandContext.getSource(), ResourceLocationArgument.getId(commandContext, "plant"), IntegerArgumentType.getInteger(commandContext, "count")))
+										.executes(commandContext -> GiveSeedCommand.giveSeed(commandContext.getSource(), IdentifierArgument.getId(commandContext, "plant"), IntegerArgumentType.getInteger(commandContext, "count")))
 								)
 						)
 						// give a seed with a different given value to the stats, value are ordered by the stats id alphabetical order, default to 1 if not filled
 						.then(Commands.literal("distinct")
 								.then(Commands.argument("value", StringArgumentType.string())
-										.executes(commandContext -> GiveSeedCommand.giveSeed(commandContext.getSource(), ResourceLocationArgument.getId(commandContext, "plant"), StringArgumentType.getString(commandContext, "value")))
+										.executes(commandContext -> GiveSeedCommand.giveSeed(commandContext.getSource(), IdentifierArgument.getId(commandContext, "plant"), StringArgumentType.getString(commandContext, "value")))
 								)
 						)
 				)
@@ -71,7 +71,7 @@ public class GiveSeedCommand {
 
 	}
 
-	public static int giveSeed(CommandSourceStack source, ResourceLocation plant) {
+	public static int giveSeed(CommandSourceStack source, Identifier plant) {
 		Optional<AgriPlant> optional = AgriApi.getPlant(plant, source.getLevel().registryAccess());
 		if (optional.isEmpty()) {
 			return 0;
@@ -84,7 +84,7 @@ public class GiveSeedCommand {
 		return 0;
 	}
 
-	public static int giveSeed(CommandSourceStack source, ResourceLocation plant, int value) {
+	public static int giveSeed(CommandSourceStack source, Identifier plant, int value) {
 		AgriAllele<String> allele = AgriGeneRegistry.getInstance().getGeneSpecies().getAllele(plant.toString());
 		AgriGenome genome = new AgriGenome(new AgriGenePair<>(AgriGeneRegistry.getInstance().getGeneSpecies(), allele),
 				AgriStatRegistry.getInstance().stream()
@@ -102,7 +102,7 @@ public class GiveSeedCommand {
 		return 0;
 	}
 
-	private static int giveSeed(CommandSourceStack source, ResourceLocation plant, String distincts) {
+	private static int giveSeed(CommandSourceStack source, Identifier plant, String distincts) {
 		AgriAllele<String> allele = AgriGeneRegistry.getInstance().getGeneSpecies().getAllele(plant.toString());
 		List<AgriGene<Integer>> genes = AgriStatRegistry.getInstance().stream()
 				.sorted(Comparator.comparing(AgriStat::getId))

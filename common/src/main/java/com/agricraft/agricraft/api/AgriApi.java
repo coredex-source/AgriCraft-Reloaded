@@ -16,10 +16,11 @@ import com.agricraft.agricraft.api.requirement.SeasonLogic;
 import com.agricraft.agricraft.api.stat.AgriStatRegistry;
 import com.agricraft.agricraft.common.util.Platform;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,42 +34,42 @@ public final class AgriApi {
 
 	public static final String MOD_ID = "agricraft";
 
-	public static final ResourceKey<Registry<AgriPlant>> AGRIPLANTS = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "plants"));
-	public static final ResourceKey<Registry<AgriWeed>> AGRIWEEDS = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "weeds"));
-	public static final ResourceKey<Registry<AgriSoil>> AGRISOILS = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "soils"));
-	public static final ResourceKey<Registry<AgriMutation>> AGRIMUTATIONS = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "mutations"));
-	public static final ResourceKey<Registry<AgriFertilizer>> AGRIFERTILIZERS = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "fertilizers"));
+	public static final ResourceKey<Registry<AgriPlant>> AGRIPLANTS = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "plants"));
+	public static final ResourceKey<Registry<AgriWeed>> AGRIWEEDS = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "weeds"));
+	public static final ResourceKey<Registry<AgriSoil>> AGRISOILS = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "soils"));
+	public static final ResourceKey<Registry<AgriMutation>> AGRIMUTATIONS = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "mutations"));
+	public static final ResourceKey<Registry<AgriFertilizer>> AGRIFERTILIZERS = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "fertilizers"));
 
 	public static Optional<Registry<AgriPlant>> getPlantRegistry() {
 		return Platform.get().getRegistry(AGRIPLANTS);
 	}
 
 	public static Optional<Registry<AgriPlant>> getPlantRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AGRIPLANTS);
+		return registryAccess.lookup(AGRIPLANTS);
 	}
 
-	public static Optional<ResourceLocation> getPlantId(AgriPlant plant) {
+	public static Optional<Identifier> getPlantId(AgriPlant plant) {
 		return AgriApi.getPlantRegistry().map(registry -> registry.getKey(plant));
 	}
 
-	public static Optional<ResourceLocation> getPlantId(AgriPlant plant, RegistryAccess registryAccess) {
+	public static Optional<Identifier> getPlantId(AgriPlant plant, RegistryAccess registryAccess) {
 		return AgriApi.getPlantRegistry(registryAccess).map(registry -> registry.getKey(plant));
 	}
 
 	public static Optional<AgriPlant> getPlant(String plantId) {
-		return AgriApi.getPlant(ResourceLocation.parse(plantId));
+		return AgriApi.getPlant(Identifier.parse(plantId));
 	}
 
-	public static Optional<AgriPlant> getPlant(ResourceLocation plantId) {
-		return AgriApi.getPlantRegistry().map(registry -> registry.get(plantId));
+	public static Optional<AgriPlant> getPlant(Identifier plantId) {
+		return AgriApi.getPlantRegistry().flatMap(registry -> registry.get(plantId).map(Holder::value));
 	}
 
 	public static Optional<AgriPlant> getPlant(String plantId, RegistryAccess registryAccess) {
-		return AgriApi.getPlant(ResourceLocation.parse(plantId), registryAccess);
+		return AgriApi.getPlant(Identifier.parse(plantId), registryAccess);
 	}
 
-	public static Optional<AgriPlant> getPlant(ResourceLocation plantId, RegistryAccess registryAccess) {
-		return AgriApi.getPlantRegistry(registryAccess).map(registry -> registry.get(plantId));
+	public static Optional<AgriPlant> getPlant(Identifier plantId, RegistryAccess registryAccess) {
+		return AgriApi.getPlantRegistry(registryAccess).flatMap(registry -> registry.get(plantId).map(Holder::value));
 	}
 
 	public static Optional<Registry<AgriWeed>> getWeedRegistry() {
@@ -76,23 +77,23 @@ public final class AgriApi {
 	}
 
 	public static Optional<Registry<AgriWeed>> getWeedRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AGRIWEEDS);
+		return registryAccess.lookup(AGRIWEEDS);
 	}
 
 	public static Optional<AgriWeed> getWeed(String weedId) {
-		return AgriApi.getWeed(ResourceLocation.parse(weedId));
+		return AgriApi.getWeed(Identifier.parse(weedId));
 	}
 
-	public static Optional<AgriWeed> getWeed(ResourceLocation weedId) {
-		return AgriApi.getWeedRegistry().map(registry -> registry.get(weedId));
+	public static Optional<AgriWeed> getWeed(Identifier weedId) {
+		return AgriApi.getWeedRegistry().flatMap(registry -> registry.get(weedId).map(Holder::value));
 	}
 
 	public static Optional<AgriWeed> getWeed(String weedId, RegistryAccess registryAccess) {
-		return AgriApi.getWeed(ResourceLocation.parse(weedId), registryAccess);
+		return AgriApi.getWeed(Identifier.parse(weedId), registryAccess);
 	}
 
-	public static Optional<AgriWeed> getWeed(ResourceLocation weedId, RegistryAccess registryAccess) {
-		return AgriApi.getWeedRegistry(registryAccess).map(registry -> registry.get(weedId));
+	public static Optional<AgriWeed> getWeed(Identifier weedId, RegistryAccess registryAccess) {
+		return AgriApi.getWeedRegistry(registryAccess).flatMap(registry -> registry.get(weedId).map(Holder::value));
 	}
 
 	public static Optional<Registry<AgriSoil>> getSoilRegistry() {
@@ -100,14 +101,14 @@ public final class AgriApi {
 	}
 
 	public static Optional<Registry<AgriSoil>> getSoilRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AGRISOILS);
+		return registryAccess.lookup(AGRISOILS);
 	}
 
-	public static Optional<ResourceLocation> getSoilId(AgriSoil soil) {
+	public static Optional<Identifier> getSoilId(AgriSoil soil) {
 		return AgriApi.getSoilRegistry().map(registry -> registry.getKey(soil));
 	}
 
-	public static Optional<ResourceLocation> getSoilId(AgriSoil soil, RegistryAccess registryAccess) {
+	public static Optional<Identifier> getSoilId(AgriSoil soil, RegistryAccess registryAccess) {
 		return AgriApi.getSoilRegistry(registryAccess).map(registry -> registry.getKey(soil));
 	}
 
@@ -136,7 +137,7 @@ public final class AgriApi {
 	}
 
 	public static Optional<Registry<AgriMutation>> getMutationRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AGRIMUTATIONS);
+		return registryAccess.lookup(AGRIMUTATIONS);
 	}
 
 	public static Stream<AgriMutation> getMutationsFromParents(String parent1, String parent2) {
@@ -157,7 +158,7 @@ public final class AgriApi {
 	}
 
 	public static Optional<Registry<AgriFertilizer>> getFertilizerRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AGRIFERTILIZERS);
+		return registryAccess.lookup(AGRIFERTILIZERS);
 	}
 
 	public static Optional<AgriFertilizer> getFertilizer(ItemStack stack) {

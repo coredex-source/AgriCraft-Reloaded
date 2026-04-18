@@ -6,7 +6,7 @@ import com.agricraft.agricraft.api.fertilizer.AgriFertilizerParticle;
 import com.agricraft.agricraft.api.fertilizer.AgriFertilizerVariant;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ public class FertilizersDatagen {
 
 	private static void mc(BootstrapContext<AgriFertilizer> context, String fertilizerId, AgriFertilizer fertilizer) {
 		context.register(
-				ResourceKey.create(AgriApi.AGRIFERTILIZERS, ResourceLocation.fromNamespaceAndPath("minecraft", fertilizerId)),
+				ResourceKey.create(AgriApi.AGRIFERTILIZERS, Identifier.fromNamespaceAndPath("minecraft", fertilizerId)),
 				fertilizer
 		);
 	}
 
 	private static void mysticalagriculture(BootstrapContext<AgriFertilizer> context, String fertilizerId, AgriFertilizer fertilizer) {
 		context.register(
-				ResourceKey.create(AgriApi.AGRIFERTILIZERS, ResourceLocation.fromNamespaceAndPath("mysticalagriculture", fertilizerId)),
+				ResourceKey.create(AgriApi.AGRIFERTILIZERS, Identifier.fromNamespaceAndPath("mysticalagriculture", fertilizerId)),
 				fertilizer
 		);
 	}

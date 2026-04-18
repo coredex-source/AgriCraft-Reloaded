@@ -16,6 +16,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -23,6 +24,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -30,11 +32,14 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -44,11 +49,11 @@ import java.util.function.BooleanSupplier;
 
 public class CropRequirementCategory implements IRecipeCategory<CropRequirementCategory.Recipe> {
 
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "jei/requirement");
+	public static final Identifier ID = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "jei/requirement");
 	public static final RecipeType<CropRequirementCategory.Recipe> TYPE = new RecipeType<>(ID, CropRequirementCategory.Recipe.class);
-	public static final IDrawable BACKGROUND = AgriCraftJeiPlugin.createDrawable(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/jei/crop_requirement.png"), 0, 0, 128, 128, 128, 128);
-	public static final ResourceLocation COMPONENTS = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/jei/crop_requirement_components.png");
-	public static final ResourceLocation GUI_COMPONENTS = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/gui_components.png");
+	public static final IDrawable BACKGROUND = AgriCraftJeiPlugin.createDrawable(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/jei/crop_requirement.png"), 0, 0, 128, 128, 128, 128);
+	public static final Identifier COMPONENTS = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/jei/crop_requirement_components.png");
+	public static final Identifier GUI_COMPONENTS = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/gui_components.png");
 	public static final int[] HUMIDITY_OFFSETS = {8, 8, 10, 10, 10, 7};
 	public static final int[] ACIDITY_OFFSETS = {7, 8, 7, 8, 8, 8, 6};
 	public static final int[] NUTRIENTS_OFFSETS = {6, 8, 9, 9, 11, 10};
@@ -72,8 +77,13 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 	}
 
 	@Override
-	public IDrawable getBackground() {
-		return BACKGROUND;
+	public int getWidth() {
+		return 128;
+	}
+
+	@Override
+	public int getHeight() {
+		return 128;
 	}
 
 	@Override
@@ -94,25 +104,26 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 
 	@Override
 	public void draw(CropRequirementCategory.Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+		BACKGROUND.draw(guiGraphics, 0, 0);
 		// render buttons
-		recipe.incStrButton.renderWidget(guiGraphics, (int) mouseX, (int) mouseY, 0);
-		recipe.decStrButton.renderWidget(guiGraphics, (int) mouseX, (int) mouseY, 0);
-		recipe.incStageButton.renderWidget(guiGraphics, (int) mouseX, (int) mouseY, 0);
-		recipe.decStageButton.renderWidget(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.incStrButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.decStrButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.incStageButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.decStageButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
 		// render strength increment
 		for (int i = 0; i < recipe.currentStrength; ++i) {
-			guiGraphics.blit(COMPONENTS, 105, 66 - i * 5, 0, 66, 7, 3, 128, 128);
+			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, COMPONENTS, 105, 66 - i * 5, 0, 66, 7, 3, 128, 128);
 		}
 		// render stage increment
 		int maxHeight = 48;
 		int stageHeight = (int) (maxHeight * recipe.currentStage.growthPercentage());
 		int stageY = 21 + maxHeight - stageHeight;
-		guiGraphics.blit(COMPONENTS, 93, stageY, 7, stageHeight, 0, 69, 7, 1, 128, 128);
+		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, COMPONENTS, 93, stageY, 0, 69, 7, 1, 7, stageHeight, 128, 128);
 		// render light levels
 		for (int i = 15; i >= 0; --i) {
 			boolean fertile = AgriGrowthConditionRegistry.getLight().apply(recipe.plant, recipe.currentStrength, i).isFertile();
 			if (fertile) {
-				guiGraphics.blit(COMPONENTS, 32, 26 + 3 * (15 - i), 3, 3, 0, 18 + 3 * (15 - i), 3, 3, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, COMPONENTS, 32, 26 + 3 * (15 - i), 0, 18 + 3 * (15 - i), 3, 3, 3, 3, 128, 128);
 			}
 		}
 		// render soil property icons
@@ -126,7 +137,7 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 				for (int i = 0; i < index; ++i) {
 					offset += HUMIDITY_OFFSETS[i];
 				}
-				guiGraphics.blit(GUI_COMPONENTS, 37 + offset, 83, HUMIDITY_OFFSETS[index], 12, offset, 0, HUMIDITY_OFFSETS[index], 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, 37 + offset, 83, offset, 0, HUMIDITY_OFFSETS[index], 12, HUMIDITY_OFFSETS[index], 12, 128, 128);
 			}
 		}
 		for (AgriSoilCondition.Acidity acidity : AgriSoilCondition.Acidity.values()) {
@@ -139,7 +150,7 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 				for (int i = 0; i < index; ++i) {
 					offset += ACIDITY_OFFSETS[i];
 				}
-				guiGraphics.blit(GUI_COMPONENTS, 37 + offset, 96, ACIDITY_OFFSETS[index], 12, offset, 12, ACIDITY_OFFSETS[index], 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, 37 + offset, 96, offset, 12, ACIDITY_OFFSETS[index], 12, ACIDITY_OFFSETS[index], 12, 128, 128);
 			}
 		}
 		for (AgriSoilCondition.Nutrients nutrients : AgriSoilCondition.Nutrients.values()) {
@@ -152,7 +163,7 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 				for (int i = 0; i < index; ++i) {
 					offset += NUTRIENTS_OFFSETS[i];
 				}
-				guiGraphics.blit(GUI_COMPONENTS, 37 + offset, 109, NUTRIENTS_OFFSETS[index], 12, offset, 24, NUTRIENTS_OFFSETS[index], 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, 37 + offset, 109, offset, 24, NUTRIENTS_OFFSETS[index], 12, NUTRIENTS_OFFSETS[index], 12, 128, 128);
 			}
 		}
 		// render seasons
@@ -162,19 +173,21 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 					continue;
 				}
 				if (AgriGrowthConditionRegistry.getSeason().apply(recipe.plant, recipe.currentStrength, season).isFertile()) {
-					guiGraphics.blit(GUI_COMPONENTS, 17, 24 + 13 * season.ordinal(), 10 * season.ordinal(), 44, 10, 12, 128, 128);
+					guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, 17, 24 + 13 * season.ordinal(), 10 * season.ordinal(), 44, 10, 12, 128, 128);
 				}
 			}
 		}
 		// render soils and plant stage
 		long l = System.currentTimeMillis();
-		if (lastTime + 1500 <= l && !Screen.hasShiftDown()) {  // change soil to render
+		var window = Minecraft.getInstance().getWindow();
+		boolean shiftDown = InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT) || InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT);
+		if (lastTime + 1500 <= l && !shiftDown) {  // change soil to render
 			recipe.tick();
 			lastTime = l;
 		}
-		PoseStack stack = guiGraphics.pose();
+		PoseStack stack = new PoseStack();
 		stack.pushPose();
-		Lighting.setupForFlatItems();
+		Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_FLAT);
 		stack.translate(56, 53, 0);
 		stack.translate(-4, 12, 0);
 		stack.scale(16, -16, 1);
@@ -188,10 +201,10 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 			stack.popPose();
 		}
 		// render plant
-		BakedModel model = AgriClientApi.getPlantModel(recipe.plantId, recipe.currentStage.index());
+		BlockStateModel model = AgriClientApi.getPlantModel(recipe.plantId, recipe.currentStage.index());
 		stack.pushPose();
 		stack.translate(0, 1, 0);
-		Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(stack.last(), guiGraphics.bufferSource().getBuffer(RenderType.cutoutMipped()), null, model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+		ModelBlockRenderer.renderModel(stack.last(), bufferSource.getBuffer(RenderTypes.cutoutMovingBlock()), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 		stack.popPose();
 		// TODO: @ketheroth display block below requirement
 		bufferSource.endBatch();
@@ -199,49 +212,27 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 	}
 
 	@Override
-	public boolean handleInput(Recipe recipe, double mouseX, double mouseY, InputConstants.Key input) {
-		if (input.getType() == InputConstants.Type.MOUSE) {
-			int mouseButton = input.getValue();
-			if (mouseButton == 0) {
-				if (recipe.incStrButton.isMouseOver(mouseX, mouseY)) {
-					recipe.incStrButton.onPress();
-					return true;
-				}
-				if (recipe.decStrButton.isMouseOver(mouseX, mouseY)) {
-					recipe.decStrButton.onPress();
-					return true;
-				}
-				if (recipe.incStageButton.isMouseOver(mouseX, mouseY)) {
-					recipe.incStageButton.onPress();
-					return true;
-				}
-				if (recipe.decStageButton.isMouseOver(mouseX, mouseY)) {
-					recipe.decStageButton.onPress();
-					return true;
-				}
-			}
-		}
-		return IRecipeCategory.super.handleInput(recipe, mouseX, mouseY, input);
-	}
-
-	@Override
-	public List<Component> getTooltipStrings(Recipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+	public void getTooltip(ITooltipBuilder tooltip, Recipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		if (104 <= mouseX && mouseX <= 113 && 20 <= mouseY && mouseY <= 70) {
-			return List.of(Component.translatable("agricraft.tooltip.jei.strength", recipe.currentStrength));
+			tooltip.add(Component.translatable("agricraft.tooltip.jei.strength", recipe.currentStrength));
+			return;
 		}
 		if (92 <= mouseX && mouseX <= 101 && 20 <= mouseY && mouseY <= 70) {
-			return List.of(Component.translatable("agricraft.tooltip.jei.stage", recipe.currentStage.index()));
+			tooltip.add(Component.translatable("agricraft.tooltip.jei.stage", recipe.currentStage.index()));
+			return;
 		}
 		if (32 <= mouseX && mouseX <= 35 && 26 <= mouseY && mouseY <= 73) {
 			int light = 15 - ((int) (mouseY - 26) / 3);
-			return List.of(Component.translatable("agricraft.tooltip.jei.light", light));
+			tooltip.add(Component.translatable("agricraft.tooltip.jei.light", light));
+			return;
 		}
 		if (83 <= mouseY && mouseY <= 95) {
 			int offset = 0;
 			for (int i = 0; i < HUMIDITY_OFFSETS.length; i++) {
 				if (37 + offset <= mouseX && mouseX <= 37 + offset + HUMIDITY_OFFSETS[i]) {
 					AgriSoilCondition.Humidity humidity = AgriSoilCondition.Humidity.values()[i];
-					return List.of(Component.translatable("agricraft.soil.humidity." + humidity.name().toLowerCase()));
+					tooltip.add(Component.translatable("agricraft.soil.humidity." + humidity.name().toLowerCase()));
+					return;
 				}
 				offset += HUMIDITY_OFFSETS[i];
 			}
@@ -251,7 +242,8 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 			for (int i = 0; i < ACIDITY_OFFSETS.length; i++) {
 				if (37 + offset <= mouseX && mouseX <= 37 + offset + ACIDITY_OFFSETS[i]) {
 					AgriSoilCondition.Acidity acidity = AgriSoilCondition.Acidity.values()[i];
-					return List.of(Component.translatable("agricraft.soil.acidity." + acidity.name().toLowerCase()));
+					tooltip.add(Component.translatable("agricraft.soil.acidity." + acidity.name().toLowerCase()));
+					return;
 				}
 				offset += ACIDITY_OFFSETS[i];
 			}
@@ -261,33 +253,44 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 			for (int i = 0; i < NUTRIENTS_OFFSETS.length; i++) {
 				if (37 + offset <= mouseX && mouseX <= 37 + offset + NUTRIENTS_OFFSETS[i]) {
 					AgriSoilCondition.Nutrients nutrients = AgriSoilCondition.Nutrients.values()[i];
-					return List.of(Component.translatable("agricraft.soil.nutrients." + nutrients.name().toLowerCase()));
+					tooltip.add(Component.translatable("agricraft.soil.nutrients." + nutrients.name().toLowerCase()));
+					return;
 				}
 				offset += NUTRIENTS_OFFSETS[i];
 			}
 		}
 		if (50 <= mouseX && mouseX <= 76 && 34 <= mouseY && mouseY <= 58) {
 			Component desc = LangUtils.plantDescription(recipe.plantId);
-			return desc == null ? List.of(LangUtils.plantName(recipe.plantId)) : List.of(LangUtils.plantName(recipe.plantId), desc);
+			if (desc == null) {
+				tooltip.add(LangUtils.plantName(recipe.plantId));
+			} else {
+				tooltip.add(LangUtils.plantName(recipe.plantId));
+				tooltip.add(desc);
+			}
+			return;
 		}
-		if (50 <= mouseX && mouseX <= 76 && 58 <= mouseY && mouseY <= 74) {
-			return Screen.getTooltipFromItem(Minecraft.getInstance(), new ItemStack(recipe.soils.get(recipe.soil)));
+		if (50 <= mouseX && mouseX <= 76 && 58 <= mouseY && mouseY <= 74 && !recipe.soils.isEmpty() && recipe.soil < recipe.soils.size()) {
+			tooltip.addAll(Screen.getTooltipFromItem(Minecraft.getInstance(), new ItemStack(recipe.soils.get(recipe.soil))));
+			return;
 		}
 		if (AgriApi.getSeasonLogic().isActive()) {
 			if (17 <= mouseX && mouseX <= 29 && 24 <= mouseY && mouseY <= 36) {
-				return List.of(LangUtils.seasonName(AgriSeason.SPRING));
+				tooltip.add(LangUtils.seasonName(AgriSeason.SPRING));
+				return;
 			}
 			if (17 <= mouseX && mouseX <= 29 && 37 <= mouseY && mouseY <= 49) {
-				return List.of(LangUtils.seasonName(AgriSeason.SUMMER));
+				tooltip.add(LangUtils.seasonName(AgriSeason.SUMMER));
+				return;
 			}
 			if (17 <= mouseX && mouseX <= 29 && 50 <= mouseY && mouseY <= 62) {
-				return List.of(LangUtils.seasonName(AgriSeason.AUTUMN));
+				tooltip.add(LangUtils.seasonName(AgriSeason.AUTUMN));
+				return;
 			}
 			if (17 <= mouseX && mouseX <= 29 && 63 <= mouseY && mouseY <= 74) {
-				return List.of(LangUtils.seasonName(AgriSeason.WINTER));
+				tooltip.add(LangUtils.seasonName(AgriSeason.WINTER));
+				return;
 			}
 		}
-		return IRecipeCategory.super.getTooltipStrings(recipe, recipeSlotsView, mouseX, mouseY);
 	}
 
 	public static class Recipe {
@@ -305,7 +308,7 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 
 		public Recipe(AgriPlant plant) {
 			this.plant = plant;
-			this.plantId = AgriApi.getPlantId(plant).map(ResourceLocation::toString).orElse("");
+			this.plantId = AgriApi.getPlantId(plant).map(Identifier::toString).orElse("");
 			this.currentStage = plant.getInitialGrowthStage();
 			this.incStrButton = new Btn(104, 10, 9, 9, this::incrementStrength, true);
 			this.decStrButton = new Btn(104, 71, 9, 9, this::decrementStrength, false);
@@ -372,16 +375,16 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 		}
 
 		@Override
-		public void onPress() {
+		public void onPress(InputWithModifiers inputWithModifiers) {
 			onPress.getAsBoolean();
 		}
 
 		@Override
-		protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
 			int vOffset = isIncrement ? 9 : 0;
 			int uOffset = this.getUOffset();
 			this.isHovered = this.getX() <= mouseX && mouseX < this.getX() + this.getWidth() && this.getY() <= mouseY && mouseY < this.getY() + this.getHeight();
-			guiGraphics.blit(COMPONENTS, this.getX(), this.getY(), uOffset, vOffset, 9, 9, 128, 128);
+			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, COMPONENTS, this.getX(), this.getY(), uOffset, vOffset, 9, 9, 128, 128);
 		}
 
 		private int getUOffset() {

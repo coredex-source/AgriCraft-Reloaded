@@ -5,7 +5,7 @@ import com.agricraft.agricraft.api.codecs.AgriRequirement;
 import com.agricraft.agricraft.api.plant.AgriWeed;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import static com.agricraft.agricraft.api.codecs.AgriSoilCondition.Acidity.NEUTRAL;
 import static com.agricraft.agricraft.api.codecs.AgriSoilCondition.Humidity.DAMP;
@@ -28,7 +28,7 @@ public class WeedsDatagen {
 
 	private static void agricraft(BootstrapContext<AgriWeed> context, String weedId, AgriWeed weed) {
 		context.register(
-				ResourceKey.create(AgriApi.AGRIWEEDS, ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, weedId)),
+				ResourceKey.create(AgriApi.AGRIWEEDS, Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, weedId)),
 				weed
 		);
 	}

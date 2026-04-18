@@ -2,7 +2,7 @@ package com.agricraft.agricraft.common.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -15,8 +15,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Optional;
 
 public interface SimpleFluidloggedBlock extends BucketPickup, LiquidBlockContainer {
@@ -24,7 +22,7 @@ public interface SimpleFluidloggedBlock extends BucketPickup, LiquidBlockContain
     BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     @Override
-    default boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+    default boolean canPlaceLiquid(LivingEntity entity, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
         return fluid == Fluids.LAVA || fluid == Fluids.WATER;
     }
 
@@ -52,7 +50,7 @@ public interface SimpleFluidloggedBlock extends BucketPickup, LiquidBlockContain
     }
 
     @Override
-    default ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state) {
+    default ItemStack pickupBlock(LivingEntity entity, LevelAccessor level, BlockPos pos, BlockState state) {
         if (state.getValue(LAVALOGGED)) {
             level.setBlock(pos, state.setValue(LAVALOGGED, false), 3);
             if (!state.canSurvive(level, pos)) {

@@ -11,12 +11,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 
-	private final ResourceLocation DNA_SCHEMATIC = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/journal/dna_schematic.png");
+	private final Identifier DNA_SCHEMATIC = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/journal/dna_schematic.png");
 
 	private final Component CROP_BREEDING = Component.translatable("agricraft.journal.crop_breeding");
 	private final Component PARAGRAPH_L_1 = Component.translatable("agricraft.journal.crop_breeding.paragraph_1");
@@ -50,7 +51,7 @@ public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 		dy += this.drawScaledText(guiGraphics, PARAGRAPH_L_2, dx, dy, scale);
 		dy += spacing;
 		// Illustration
-		guiGraphics.blit(DNA_SCHEMATIC, (int) dx, (int) dy, 0, 0, 96, 32, 96, 32);
+		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, DNA_SCHEMATIC, (int) dx, (int) dy, 0, 0, 96, 32, 96, 32);
 		dy += spacing + 32;
 		// Third paragraph
 		this.drawScaledText(guiGraphics, PARAGRAPH_L_3, dx, dy, scale);

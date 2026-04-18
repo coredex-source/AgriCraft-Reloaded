@@ -12,9 +12,10 @@ import com.agricraft.agricraft.common.util.LangUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 	public void drawLeftSheet(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 		// Title
-		guiGraphics.blit(GUI_COMPONENTS, pageX + 4, pageY + 9, 0, 56, 128, 20, 128, 128);
-		String plantId = AgriApi.getPlantId(page.getPlant()).map(ResourceLocation::toString).orElse("");
+		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 4, pageY + 9, 0, 56, 128, 20, 128, 128);
+		String plantId = AgriApi.getPlantId(page.getPlant()).map(Identifier::toString).orElse("");
 		Component plantName = LangUtils.plantName(plantId);
 		Component seedName = LangUtils.seedName(plantId);
 		int titleWidth = font.width(plantName);
@@ -67,19 +68,19 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 		float dy = pageY + Math.max(yOffset, 60);
 		dy += this.drawScaledText(guiGraphics, GROWTH_REQUIREMENTS, pageX + 10, dy, 0.80F) + 1;
 		// Light level
-		guiGraphics.blit(GUI_COMPONENTS, pageX + 10, (int) dy, 0, 36, 66, 8, 128, 128);
+		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10, (int) dy, 0, 36, 66, 8, 128, 128);
 
 		for (int i = 0; i < page.brightnessMask().length; i++) {
 			boolean current = page.brightnessMask()[i];
 			if (current) {
 				boolean prev = i > 0 && page.brightnessMask()[i - 1];
 				boolean next = i < (page.brightnessMask().length - 1) && page.brightnessMask()[i + 1];
-				guiGraphics.blit(GUI_COMPONENTS, pageX + 10 + 4 * i + 1, (int) dy, 4, 8, 67, 36, 2, 8, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10 + 4 * i + 1, (int) dy, 67, 36, 2, 8, 4, 8, 128, 128);
 				if (!prev) {
-					guiGraphics.blit(GUI_COMPONENTS, pageX + 10 + 4 * i, (int) dy, 66, 36, 1, 8, 128, 128);
+					guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10 + 4 * i, (int) dy, 66, 36, 1, 8, 128, 128);
 				}
 				if (!next) {
-					guiGraphics.blit(GUI_COMPONENTS, pageX + 10 + 4 * i + 5, (int) dy, 66, 36, 1, 8, 128, 128);
+					guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10 + 4 * i + 5, (int) dy, 66, 36, 1, 8, 128, 128);
 				}
 			}
 		}
@@ -90,9 +91,9 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 				int x = pageX + 75 + i % 2 * 12;
 				int y = (int) (dy + 6 + i / 2 * 12);
 				if (page.seasonMask()[i]) {
-					guiGraphics.blit(GUI_COMPONENTS, x, y, i * 10, 44, 10, 12, 128, 128);
+					guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, x, y, i * 10, 44, 10, 12, 128, 128);
 				} else {
-					guiGraphics.blit(GUI_COMPONENTS, x, y, 40 + i * 10, 44, 10, 12, 128, 128);
+					guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, x, y, 40 + i * 10, 44, 10, 12, 128, 128);
 				}
 			}
 		}
@@ -101,9 +102,9 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			int dx = HUMIDITY_OFFSETS[i];
 			int width = HUMIDITY_OFFSETS[i + 1] - HUMIDITY_OFFSETS[i];
 			if (page.humidityMask()[i]) {
-				guiGraphics.blit(GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx, 0, width, 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx, 0, width, 12, 128, 128);
 			} else {
-				guiGraphics.blit(GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx + 53, 0, width, 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx + 53, 0, width, 12, 128, 128);
 			}
 		}
 		dy += 13;
@@ -112,9 +113,9 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			int dx = ACIDITY_OFFSETS[i];
 			int width = ACIDITY_OFFSETS[i + 1] - ACIDITY_OFFSETS[i];
 			if (page.acidityMask()[i]) {
-				guiGraphics.blit(GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx, 12, width, 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx, 12, width, 12, 128, 128);
 			} else {
-				guiGraphics.blit(GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx + 53, 12, width, 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx + 53, 12, width, 12, 128, 128);
 			}
 		}
 		dy += 13;
@@ -123,9 +124,9 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			int dx = NUTRIENTS_OFFSETS[i];
 			int width = NUTRIENTS_OFFSETS[i + 1] - NUTRIENTS_OFFSETS[i];
 			if (page.nutrientsMask()[i]) {
-				guiGraphics.blit(GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx, 24, width, 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx, 24, width, 12, 128, 128);
 			} else {
-				guiGraphics.blit(GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx + 53, 24, width, 12, 128, 128);
+				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + dx + 10, (int) dy, dx + 53, 24, width, 12, 128, 128);
 			}
 		}
 		return (int) (dy + 13);
@@ -134,21 +135,21 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 	protected void drawProducts(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY) {
 		this.drawScaledText(guiGraphics, PRODUCTS, pageX + 10, pageY + 10, 0.80F);
 		for (int i = 0; i < page.getProducts().size(); i++) {
-			guiGraphics.blit(GUI_COMPONENTS, pageX + 10 + i * 20, pageY + 19, 0, 76, 18, 18, 128, 128);
+			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10 + i * 20, pageY + 19, 0, 76, 18, 18, 128, 128);
 			guiGraphics.renderItem(page.getProducts().get(i), pageX + 11 + i * 20, pageY + 20);
 		}
 	}
 
 	protected void drawMutations(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY) {
 		this.drawScaledText(guiGraphics, MUTATIONS, pageX + 10, pageY + 15, 0.80F);
-		for (List<ResourceLocation> plants : page.getMutationsOnPage()) {
-			guiGraphics.blit(GUI_COMPONENTS, pageX + 10, pageY + 24, 0, 76, 86, 18, 128, 128);
-			TextureAtlasSprite parent1 = AgriClientApi.getPlantModel(plants.get(0), AgriApi.getPlant(plants.get(0)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).getParticleIcon();
-			TextureAtlasSprite parent2 = AgriClientApi.getPlantModel(plants.get(1), AgriApi.getPlant(plants.get(1)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).getParticleIcon();
-			TextureAtlasSprite child = AgriClientApi.getPlantModel(plants.get(2), AgriApi.getPlant(plants.get(2)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).getParticleIcon();
-			guiGraphics.blit(pageX + 11, pageY + 25, 1, 16, 16, parent1);
-			guiGraphics.blit(pageX + 45, pageY + 25, 1, 16, 16, parent2);
-			guiGraphics.blit(pageX + 79, pageY + 25, 1, 16, 16, child);
+		for (List<Identifier> plants : page.getMutationsOnPage()) {
+			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10, pageY + 24, 0, 76, 86, 18, 128, 128);
+			TextureAtlasSprite parent1 = AgriClientApi.getPlantModel(plants.get(0), AgriApi.getPlant(plants.get(0)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleIcon();
+			TextureAtlasSprite parent2 = AgriClientApi.getPlantModel(plants.get(1), AgriApi.getPlant(plants.get(1)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleIcon();
+			TextureAtlasSprite child = AgriClientApi.getPlantModel(plants.get(2), AgriApi.getPlant(plants.get(2)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleIcon();
+			guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, parent1, pageX + 11, pageY + 25, 16, 16);
+			guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, parent2, pageX + 45, pageY + 25, 16, 16);
+			guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, child, pageX + 79, pageY + 25, 16, 16);
 			pageY += 20;
 		}
 	}
@@ -156,12 +157,12 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 	@Override
 	public void drawLeftTooltip(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY, int mouseX, int mouseY) {
 		Font font = Minecraft.getInstance().font;
-		String plantId = AgriApi.getPlantId(page.getPlant()).map(ResourceLocation::toString).orElse("");
+		String plantId = AgriApi.getPlantId(page.getPlant()).map(Identifier::toString).orElse("");
 		Component plantName = LangUtils.plantName(plantId);
 		Component plantDescription = LangUtils.plantDescription(plantId);
 		// seed item
 		if (8 <= mouseX && mouseX <= 24 && 11 <= mouseY && mouseY <= 27) {
-			guiGraphics.renderTooltip(font, plantName, mouseX + pageX, mouseY + pageY);
+			guiGraphics.setTooltipForNextFrame(font, plantName, mouseX + pageX, mouseY + pageY);
 			return;
 		}
 
@@ -176,7 +177,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 		// Light level
 		for (int i = 0; i < page.brightnessMask().length; i++) {
 			if (10 + 4 * i <= mouseX && mouseX <= 10 + 4 * i + 4 && dy + 1 <= mouseY && mouseY <= dy + 9) {
-				guiGraphics.renderTooltip(font, Component.translatable("agricraft.tooltip.light").append(" " + i), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, Component.translatable("agricraft.tooltip.light").append(" " + i), mouseX + pageX, mouseY + pageY);
 				return;
 			}
 		}
@@ -187,7 +188,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 				int x = 75 + i % 2 * 12;
 				int y = (int) (dy + 6 + i / 2 * 12);
 				if (x <= mouseX && mouseX <= x + 10 && y <= mouseY && mouseY <= y + 12) {
-					guiGraphics.renderTooltip(font, LangUtils.seasonName(AgriSeason.values()[i]), mouseX + pageX, mouseY + pageY);
+					guiGraphics.setTooltipForNextFrame(font, LangUtils.seasonName(AgriSeason.values()[i]), mouseX + pageX, mouseY + pageY);
 					return;
 				}
 			}
@@ -197,7 +198,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			int dx = HUMIDITY_OFFSETS[i] + 10;
 			int w = HUMIDITY_OFFSETS[i + 1] - HUMIDITY_OFFSETS[i];
 			if (dx <= mouseX && mouseX <= dx + w && dy <= mouseY && mouseY <= dy + 12) {
-				guiGraphics.renderTooltip(font, LangUtils.soilPropertyName("humidity", AgriSoilCondition.Humidity.values()[i]), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, LangUtils.soilPropertyName("humidity", AgriSoilCondition.Humidity.values()[i]), mouseX + pageX, mouseY + pageY);
 				return;
 			}
 		}
@@ -207,7 +208,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			int dx = ACIDITY_OFFSETS[i] + 10;
 			int w = ACIDITY_OFFSETS[i + 1] - ACIDITY_OFFSETS[i];
 			if (dx <= mouseX && mouseX <= dx + w && dy <= mouseY && mouseY <= dy + 12) {
-				guiGraphics.renderTooltip(font, LangUtils.soilPropertyName("acidity", AgriSoilCondition.Acidity.values()[i]), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, LangUtils.soilPropertyName("acidity", AgriSoilCondition.Acidity.values()[i]), mouseX + pageX, mouseY + pageY);
 				return;
 			}
 		}
@@ -217,7 +218,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			int dx = NUTRIENTS_OFFSETS[i] + 10;
 			int w = NUTRIENTS_OFFSETS[i + 1] - NUTRIENTS_OFFSETS[i];
 			if (dx <= mouseX && mouseX <= dx + w && dy <= mouseY && mouseY <= dy + 12) {
-				guiGraphics.renderTooltip(font, LangUtils.soilPropertyName("nutrients", AgriSoilCondition.Nutrients.values()[i]), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, LangUtils.soilPropertyName("nutrients", AgriSoilCondition.Nutrients.values()[i]), mouseX + pageX, mouseY + pageY);
 				return;
 			}
 		}
@@ -225,7 +226,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 		// products tooltips
 		for (int i = 0; i < page.getProducts().size(); i++) {
 			if (11 + i * 20 <= mouseX && mouseX <= 11 + i * 20 + 16 && dy <= mouseY && mouseY <= dy + 16) {
-				guiGraphics.renderTooltip(font, page.getProducts().get(i), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, page.getProducts().get(i), mouseX + pageX, mouseY + pageY);
 			}
 		}
 
@@ -236,13 +237,13 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 		Font font = Minecraft.getInstance().font;
 		// mutation tooltips
 		int y = 0;
-		for (List<ResourceLocation> plants : page.getMutationsOnPage()) {
+		for (List<Identifier> plants : page.getMutationsOnPage()) {
 			if (11 <= mouseX && mouseX <= 27 && y + 25 <= mouseY && mouseY <= y + 41) {
-				guiGraphics.renderTooltip(font, LangUtils.plantName(plants.get(0).toString()), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, LangUtils.plantName(plants.get(0).toString()), mouseX + pageX, mouseY + pageY);
 			} else if (45 <= mouseX && mouseX <= 61 && y + 25 <= mouseY && mouseY <= y + 41) {
-				guiGraphics.renderTooltip(font, LangUtils.plantName(plants.get(1).toString()), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, LangUtils.plantName(plants.get(1).toString()), mouseX + pageX, mouseY + pageY);
 			} else if (79 <= mouseX && mouseX <= 95 && y + 25 <= mouseY && mouseY <= y + 41) {
-				guiGraphics.renderTooltip(font, LangUtils.plantName(plants.get(2).toString()), mouseX + pageX, mouseY + pageY);
+				guiGraphics.setTooltipForNextFrame(font, LangUtils.plantName(plants.get(2).toString()), mouseX + pageX, mouseY + pageY);
 			}
 			y += 20;
 		}

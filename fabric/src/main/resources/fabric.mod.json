@@ -24,9 +24,6 @@
 		"client": [
 			"com.agricraft.agricraft.client.AgriCraftFabricClient"
 		],
-		"emi": [
-			"com.agricraft.agricraft.compat.emi.AgriCraftEmiPlugin"
-		],
 		"modmenu": [
 			"com.agricraft.agricraft.common.config.fabric.ModMenuConfig"
 		],

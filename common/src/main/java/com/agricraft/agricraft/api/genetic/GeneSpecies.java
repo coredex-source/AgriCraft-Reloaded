@@ -5,11 +5,12 @@ import com.agricraft.agricraft.api.plant.AgriPlant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class GeneSpecies implements AgriGene<String> {
 
@@ -23,7 +24,7 @@ public class GeneSpecies implements AgriGene<String> {
 
 	@Override
 	public AgriAllele<String> defaultAllele(AgriPlant object) {
-		String id = AgriApi.getPlantId(object).map(ResourceLocation::toString).orElse("");
+		String id = AgriApi.getPlantId(object).map(Identifier::toString).orElse("");
 		StringAllele allele = alleles.get(id);
 		if (allele != null) {
 			return allele;
@@ -58,14 +59,14 @@ public class GeneSpecies implements AgriGene<String> {
 	}
 
 	public AgriGenePair<String> readFromNBT(CompoundTag genes) {
-		CompoundTag species = genes.getCompound(ID);
-		return new AgriGenePair<>(this, this.getAllele(species.getString("dom")),
-				this.getAllele(species.getString("rec")));
+		CompoundTag species = genes.getCompoundOrEmpty(ID);
+		return new AgriGenePair<>(this, this.getAllele(species.getStringOr("dom", "")),
+				this.getAllele(species.getStringOr("rec", "")));
 	}
 
 	@Override
-	public void addTooltip(List<Component> tooltipComponents, String trait) {
-		tooltipComponents.add(Component.translatable("agricraft.gene.species").append(": " + trait).withStyle(ChatFormatting.DARK_GRAY));
+	public void addTooltip(Consumer<Component> tooltipAdder, String trait) {
+		tooltipAdder.accept(Component.translatable("agricraft.gene.species").append(": " + trait).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	public static class StringAllele implements AgriAllele<String> {

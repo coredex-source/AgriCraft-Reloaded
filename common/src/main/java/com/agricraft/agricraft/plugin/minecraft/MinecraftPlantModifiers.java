@@ -7,8 +7,9 @@ import com.agricraft.agricraft.api.genetic.AgriGenePair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,7 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.FungusBlock;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +44,7 @@ public class MinecraftPlantModifiers {
 		AgriPlantModifierFactoryRegistry.register(BushyPlantModifier.ID, info -> Optional.of(new BushyPlantModifier()));
 		AgriPlantModifierFactoryRegistry.register(ExperiencePlantModifier.ID, info -> Optional.of(new ExperiencePlantModifier()));
 		AgriPlantModifierFactoryRegistry.register(FungusPlantModifier.ID, info -> {
-			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(info.value()));
+			Block block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(info.value()));
 			if (block instanceof FungusBlock fungus) {
 				return Optional.of(new FungusPlantModifier(fungus));
 			}
@@ -51,14 +53,14 @@ public class MinecraftPlantModifiers {
 		AgriPlantModifierFactoryRegistry.register(PoisonPlantModifier.ID, info -> Optional.of(new PoisonPlantModifier()));
 		AgriPlantModifierFactoryRegistry.register(RedstonePlantModifier.ID, info -> Optional.of(new RedstonePlantModifier()));
 		AgriPlantModifierFactoryRegistry.register(SummonPlantModifier.ID, info -> {
-			if (BuiltInRegistries.ENTITY_TYPE.containsKey(ResourceLocation.parse(info.value()))) {
-				return Optional.of(new SummonPlantModifier(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(info.value()))));
+			if (BuiltInRegistries.ENTITY_TYPE.containsKey(Identifier.parse(info.value()))) {
+				return Optional.of(new SummonPlantModifier(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(info.value()))));
 			}
 			return Optional.empty();
 		});
 		AgriPlantModifierFactoryRegistry.register(ThornsPlantModifier.ID, info -> Optional.of(new ThornsPlantModifier()));
 		AgriPlantModifierFactoryRegistry.register(TreePlantModifier.ID, info -> {
-			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(info.value()));
+			Block block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(info.value()));
 			if (block instanceof BonemealableBlock sapling) {
 				return Optional.of(new TreePlantModifier(sapling));
 			}
@@ -106,7 +108,7 @@ public class MinecraftPlantModifiers {
 
 		@Override
 		public void onHarvest(AgriCrop crop, @Nullable LivingEntity entity) {
-			if (crop.getLevel() != null && !crop.getLevel().isClientSide) {
+			if (crop.getLevel() != null && !crop.getLevel().isClientSide()) {
 				for (int i = 0; i < crop.getGenome().getGain(); i++) {
 					if (i == 0 || crop.getLevel().getRandom().nextDouble() < 0.5) {
 						BlockPos pos = crop.getBlockPos();
@@ -153,7 +155,7 @@ public class MinecraftPlantModifiers {
 
 		@Override
 		public void onEntityCollision(AgriCrop crop, Entity entity) {
-			if (entity instanceof LivingEntity livingEntity && !entity.isDiscrete() && !entity.level().isClientSide) {
+			if (entity instanceof LivingEntity livingEntity && !entity.isDiscrete() && !entity.level().isClientSide()) {
 				if (!livingEntity.hasEffect(MobEffects.POISON)) {
 					livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (20 * crop.getGenome().getStatGenes().stream().map(AgriGenePair::getTrait).mapToInt(i -> i).average().orElse(0.0))));
 				}
@@ -185,7 +187,7 @@ public class MinecraftPlantModifiers {
 		@Override
 		public void onHarvest(AgriCrop crop, @Nullable LivingEntity entity) {
 			if (entity instanceof Player player && crop.getLevel() instanceof ServerLevel serverLevel) {
-				if (entityType.spawn(serverLevel, null, player, crop.getBlockPos(), MobSpawnType.MOB_SUMMONED, true, false) != null) {
+				if (entityType.spawn(serverLevel, null, player, crop.getBlockPos(), EntitySpawnReason.MOB_SUMMONED, true, false) != null) {
 					serverLevel.gameEvent(player, GameEvent.ENTITY_PLACE, crop.getBlockPos());
 				}
 			}
@@ -238,7 +240,9 @@ public class MinecraftPlantModifiers {
 				if (serverLevel.getBlockState(crop.getBlockPos()).getBlock().equals(sapling)) {
 					// if we couldn't grow the tree, put back the crop instead of the sapling
 					serverLevel.setBlockAndUpdate(crop.getBlockPos(), crop.getBlockState());
-					serverLevel.getBlockEntity(crop.getBlockPos()).loadCustomOnly(before, serverLevel.registryAccess());
+					if (serverLevel.getBlockEntity(crop.getBlockPos()) != null) {
+						serverLevel.getBlockEntity(crop.getBlockPos()).loadCustomOnly(TagValueInput.create(ProblemReporter.DISCARDING, serverLevel.registryAccess(), before));
+					}
 					return Optional.of(InteractionResult.CONSUME);
 				}
 				serverLevel.levelEvent(2005, crop.getBlockPos(), 0);

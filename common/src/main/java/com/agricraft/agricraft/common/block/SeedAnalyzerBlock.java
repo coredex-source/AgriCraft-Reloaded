@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -85,20 +84,20 @@ public class SeedAnalyzerBlock extends Block implements EntityBlock {
 			}
 			return InteractionResult.FAIL;
 		}
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			Platform.get().openMenu((ServerPlayer) player, analyzer);
 		}
 		return InteractionResult.CONSUME;
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (hand == InteractionHand.OFF_HAND) {
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		}
 		BlockEntity blockEntity = level.getBlockEntity(pos);
 		if (!(blockEntity instanceof SeedAnalyzerBlockEntity analyzer)) {
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		}
 		if (player.isShiftKeyDown()) {
 			if (analyzer.hasSeed()) {
@@ -106,11 +105,11 @@ public class SeedAnalyzerBlock extends Block implements EntityBlock {
 				if (!player.addItem(seed)) {
 					level.addFreshEntity(new ItemEntity(level, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, seed));
 				}
-				return ItemInteractionResult.CONSUME;
+				return InteractionResult.CONSUME;
 			}
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class AgriGenome {
 
@@ -43,7 +44,7 @@ public class AgriGenome {
 		if (tag == null || !tag.contains("genes")) {
 			return null;
 		}
-		CompoundTag genes = tag.getCompound("genes");
+		CompoundTag genes = tag.getCompoundOrEmpty("genes");
 		AgriGenePair<String> species = AgriGeneRegistry.getInstance().getGeneSpecies().readFromNBT(genes);
 		List<AgriGenePair<Integer>> stats = new ArrayList<>();
 		for (AgriStat stat : AgriStatRegistry.getInstance()) {
@@ -108,12 +109,12 @@ public class AgriGenome {
 		return compoundTag.toString();
 	}
 
-	public void appendHoverText(List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+	public void appendHoverText(Consumer<Component> tooltipAdder, TooltipFlag isAdvanced) {
 		if (isAdvanced.isAdvanced()) {
-			this.getSpeciesGene().getGene().addTooltip(tooltipComponents, this.getSpeciesGene().getTrait());
+			this.getSpeciesGene().getGene().addTooltip(tooltipAdder, this.getSpeciesGene().getTrait());
 		}
 		this.getStatGenes().stream()
 				.sorted(Comparator.comparing(pair -> pair.getGene().getId()))
-				.forEach(pair -> pair.getGene().addTooltip(tooltipComponents, pair.getTrait()));
+				.forEach(pair -> pair.getGene().addTooltip(tooltipAdder, pair.getTrait()));
 	}
 }
