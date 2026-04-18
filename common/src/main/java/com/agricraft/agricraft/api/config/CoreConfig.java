@@ -74,6 +74,10 @@ public final class CoreConfig {
 	@Comment("Set this to true to have weeds destroy the crop sticks when they are broken with weeds (to encourage rake usage).")
 	public static boolean weedsDestroyCropSticks = false;
 
+	@ConfigEntry(id = "disable_fertilizer_weeds", type = EntryType.BOOLEAN, translation = "config.agricraft.core.disable_fertilizer_weeds")
+	@Comment("Set to true to prevent fertilizers (e.g. bone meal) from triggering weed growth")
+	public static boolean disableFertilizerWeeds = true;
+
 	@ConfigEntry(id = "raking_drops_items", type = EntryType.BOOLEAN, translation = "config.agricraft.core.raking_drops_items")
 	@Comment("Set to false if you wish to disable drops from raking weeds.")
 	public static boolean rakingDropsItems = true;

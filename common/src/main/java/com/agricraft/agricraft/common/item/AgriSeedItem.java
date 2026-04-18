@@ -1,18 +1,23 @@
 package com.agricraft.agricraft.common.item;
 
 import com.agricraft.agricraft.api.AgriApi;
+import com.agricraft.agricraft.api.config.CoreConfig;
 import com.agricraft.agricraft.api.genetic.AgriGenomeProviderItem;
 import com.agricraft.agricraft.api.plant.AgriPlant;
 import com.agricraft.agricraft.api.crop.AgriCrop;
 import com.agricraft.agricraft.api.genetic.AgriGenome;
+import com.agricraft.agricraft.common.block.CropBlock;
+import com.agricraft.agricraft.common.block.CropState;
 import com.agricraft.agricraft.common.block.entity.SeedAnalyzerBlockEntity;
 import com.agricraft.agricraft.common.registry.ModBlocks;
 import com.agricraft.agricraft.common.registry.ModItems;
 import com.agricraft.agricraft.common.util.LangUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -23,6 +28,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -139,7 +145,7 @@ public class AgriSeedItem extends BlockItem implements AgriGenomeProviderItem {
 			return InteractionResult.CONSUME;
 		}
 		// if a soil was clicked, check the block above and handle accordingly
-		return AgriApi.getSoil(level, context.getClickedPos()).map(soil -> AgriApi.getCrop(level, context.getClickedPos().above()).map(crop -> {
+		return AgriApi.getSoil(level, context.getClickedPos()).map(soil -> AgriApi.getCrop(level, context.getClickedPos().above()).<InteractionResult>map(crop -> {
 			// there is a crop with a plant or is a cross crop stick, do nothing
 			if (crop.hasPlant() || crop.isCrossCropSticks()) {
 				return InteractionResult.PASS;
@@ -147,7 +153,21 @@ public class AgriSeedItem extends BlockItem implements AgriGenomeProviderItem {
 			// there is a crop without a plant, plant the seed in the crop
 			plantSeed(context.getPlayer(), crop, heldItem);
 			return InteractionResult.CONSUME;
-		}).orElse(InteractionResult.PASS)).orElse(super.useOn(context));
+		}).orElseGet(() -> {
+			// no crop above soil, plant directly if config allows
+			if (!CoreConfig.plantOffCropSticks) {
+				return InteractionResult.PASS;
+			}
+			BlockPos cropPos = context.getClickedPos().above();
+			if (!level.getBlockState(cropPos).canBeReplaced()) {
+				return InteractionResult.PASS;
+			}
+			level.setBlock(cropPos, ModBlocks.CROP.get().defaultBlockState().setValue(CropBlock.CROP_STATE, CropState.PLANT), 3);
+			AgriApi.getCrop(level, cropPos).ifPresent(crop -> plantSeed(context.getPlayer(), crop, heldItem));
+			SoundType sound = SoundType.CROP;
+			level.playSound(null, cropPos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+			return InteractionResult.CONSUME;
+		})).orElse(super.useOn(context));
 	}
 
 	private void plantSeed(Player player, AgriCrop crop, ItemStack seed) {

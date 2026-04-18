@@ -31,4 +31,12 @@ public interface IAgriFertilizable {
 	 * Applies a growth tick
 	 */
 	void applyGrowthTick();
+
+	/**
+	 * Applies a growth tick from a fertilizer. When the config to disable fertilizer weeds is
+	 * enabled, this skips weed activation and directly grows the plant or triggers mutations.
+	 */
+	default void applyFertilizerGrowthTick() {
+		applyGrowthTick();
+	}
 }

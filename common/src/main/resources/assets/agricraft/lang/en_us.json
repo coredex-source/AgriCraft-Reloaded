@@ -178,6 +178,7 @@
   "config.agricraft.core.growth_multiplier": "Growth rate multiplier",
   "config.agricraft.core.only_mature_seed_drops": "Only mature crops drop seeds",
   "config.agricraft.core.seed_compost_value": "Seed compost value",
+  "config.agricraft.core.disable_fertilizer_weeds": "Disable fertilizer weed growth",
   "config.agricraft.stats": "Plant stats",
   "config.agricraft.stats.gain_min": "Min Gain",
   "config.agricraft.stats.gain_max": "Max Gain",

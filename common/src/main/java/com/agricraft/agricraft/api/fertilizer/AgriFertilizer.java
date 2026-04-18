@@ -1,5 +1,6 @@
 package com.agricraft.agricraft.api.fertilizer;
 
+import com.agricraft.agricraft.api.config.CoreConfig;
 import com.agricraft.agricraft.api.crop.AgriCrop;
 import com.agricraft.agricraft.api.crop.AgriGrowthStage;
 import com.agricraft.agricraft.common.util.Platform;
@@ -151,13 +152,13 @@ public class AgriFertilizer {
 					}
 				} else {
 					if (crop.hasPlant() && this.canFertilize(crop)) {
-						fertilizable.applyGrowthTick();
+						fertilizable.applyFertilizerGrowthTick();
 						type = "positive";
 					} else if (crop.isCrossCropSticks() && this.canTriggerMutation()) {
-						fertilizable.applyGrowthTick();
+						fertilizable.applyFertilizerGrowthTick();
 						type = "positive";
-					} else if (this.canTriggerWeeds()) {
-						fertilizable.applyGrowthTick();
+					} else if (this.canTriggerWeeds() && !CoreConfig.disableFertilizerWeeds) {
+						fertilizable.applyFertilizerGrowthTick();
 						type = "positive";
 					}
 				}

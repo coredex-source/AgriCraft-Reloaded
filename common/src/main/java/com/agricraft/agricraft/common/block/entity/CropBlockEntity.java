@@ -128,19 +128,22 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 	@Override
 	public void setLevel(Level level) {
 		super.setLevel(level);
-		// when the block id deserialized the level is null so we can't load the plant from the registry yet
+		// when the block is deserialized the level is null so we can't load the plant from the registry yet
 		// thus, we're doing it now, as soon as the level is present
 		if (level != null) {
-			if (!level.isClientSide) {
+			if (!this.plantId.isEmpty()) {
 				this.plant = AgriApi.getPlant(this.plantId, level.registryAccess()).orElse(null);
-				if (this.plant != null && this.growthStage == null) {
-					this.growthStage = this.plant.getInitialGrowthStage();
-				}
+			}
+			if (this.plant != null && this.growthStage == null) {
+				this.growthStage = this.plant.getInitialGrowthStage();
+			}
+			if (!this.weedId.isEmpty()) {
 				this.weed = AgriApi.getWeed(this.weedId, level.registryAccess()).orElse(null);
-				if (this.weed != null && this.growthStage == null) {
-					// will this happen? I'm not sure
-					this.growthStage = this.weed.getInitialGrowthStage();
-				}
+			}
+			if (this.weed != null && this.weedGrowthStage == null) {
+				this.weedGrowthStage = this.weed.getInitialGrowthStage();
+			}
+			if (!level.isClientSide) {
 				level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
 			}
 		}
@@ -183,13 +186,16 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 		this.genome = genome;
 		this.plantId = genome.getSpeciesGene().getDominant().trait();
 		this.plant = AgriApi.getPlant(this.plantId, this.level.registryAccess()).orElse(null);
-		if (this.plant != null) {
-			this.growthStage = this.plant.getInitialGrowthStage();
+		if (this.plant == null) {
+			return;
 		}
+		this.growthStage = this.plant.getInitialGrowthStage();
 		level.setBlock(this.getBlockPos(), this.hasCropSticks() ?
 				this.getBlockState().setValue(CropBlock.CROP_STATE, CropState.PLANT_STICKS).setValue(CropBlock.LIGHT, this.plant.getBrightness(this))
 				: this.getBlockState().setValue(CropBlock.LIGHT, this.plant.getBrightness(this)), 3);
-		this.plant.onPlanted(this, null);
+		this.setChanged();
+		this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+		this.plant.onPlanted(this, entity);
 	}
 
 	@Override
@@ -338,7 +344,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 		} else if (this.hasPlant()) {
 			return !this.isFullyGrown() && fertilizer.canFertilize(this);
 		} else {
-			return fertilizer.canTriggerWeeds();
+			return !CoreConfig.disableFertilizerWeeds && fertilizer.canTriggerWeeds();
 		}
 	}
 
@@ -371,6 +377,35 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 				// plant growth tick
 				this.executePlantGrowthTick();
 			}
+		}
+	}
+
+	@Override
+	public void applyFertilizerGrowthTick() {
+		if (this.level == null || this.level.isClientSide()) {
+			return;
+		}
+		if (CoreConfig.disableFertilizerWeeds) {
+			// Skip weed activation, directly grow or mutate
+			if (this.getBlockState().getValue(CropBlock.CROP_STATE) == CropState.DOUBLE_STICKS) {
+				AgriApi.getMutationHandler().getActiveCrossBreedEngine().handleCrossBreedTick(this, this.streamNeighbours(), this.level.random);
+			} else if (this.hasPlant()) {
+				AgriGrowthResponse fertility = this.getFertilityResponse();
+				if (fertility.isInstantKill()) {
+					fertility.onPlantKilled(this);
+					this.removeGenome();
+				} else if (fertility.isLethal()) {
+					this.revertGrowthStage();
+				} else if (fertility.isFertile()) {
+					// Guarantee growth advancement (no random chance) when fertilized
+					if (!this.isFullyGrown()) {
+						this.setGrowthStage(this.growthStage.getNext(this, this.level.random));
+						this.getPlant().onGrowth(this);
+					}
+				}
+			}
+		} else {
+			this.applyGrowthTick();
 		}
 	}
 
