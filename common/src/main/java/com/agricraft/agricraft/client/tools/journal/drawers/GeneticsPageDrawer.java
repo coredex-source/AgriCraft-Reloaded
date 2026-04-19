@@ -41,7 +41,7 @@ public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 		float dy = pageY + 7 + 10;
 		int spacing = 4;
 		// Title
-		guiGraphics.drawString(font, CROP_BREEDING, (int) dx, (int) dy, 0, false);
+		guiGraphics.drawString(font, CROP_BREEDING, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 		// First paragraph
@@ -65,7 +65,7 @@ public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 		float dy = pageY + 10;
 		float spacing = 4;
 		// Title
-		guiGraphics.drawString(font, STATS, (int) dx, (int) dy, 0, false);
+		guiGraphics.drawString(font, STATS, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 

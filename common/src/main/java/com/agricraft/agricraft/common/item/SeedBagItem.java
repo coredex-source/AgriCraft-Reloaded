@@ -121,25 +121,29 @@ public class SeedBagItem extends Item {
 		seedTag.putInt("count", insertedCount);
 		genome.writeToNBT(seedTag);
 		seeds.add(seedTag);
-		sort(seedBag);
+		sort(tag);
+		seedBag.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 		return insertedCount;
 	}
 
 	public static ItemStack extractFirstStack(ItemStack seedBag) {
-		ListTag seeds = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getListOrEmpty("seeds");
+		CompoundTag tag = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+		ListTag seeds = tag.getListOrEmpty("seeds");
 		BagEntry entry = BagEntry.fromNBT(seeds.getCompoundOrEmpty(0));
 		ItemStack seed = AgriSeedItem.toStack(entry.genome);
 		seed.setCount(entry.count);
 		seeds.remove(0);
 		if (seeds.isEmpty()) {
-			seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().remove("seeds");
-			seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().remove("species");
+			tag.remove("seeds");
+			tag.remove("species");
 		}
+		seedBag.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 		return seed;
 	}
 
 	public static ItemStack extractFirstItem(ItemStack seedBag, boolean simulate) {
-		ListTag seeds = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getListOrEmpty("seeds");
+		CompoundTag tag = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+		ListTag seeds = tag.getListOrEmpty("seeds");
 		CompoundTag seedTag = seeds.getCompoundOrEmpty(0);
 		AgriGenome genome = AgriGenome.fromNBT(seedTag);
 		ItemStack seed = AgriSeedItem.toStack(genome);
@@ -150,9 +154,10 @@ public class SeedBagItem extends Item {
 				seeds.remove(0);
 			}
 			if (seeds.isEmpty()) {
-				seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().remove("seeds");
-				seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().remove("species");
+				tag.remove("seeds");
+				tag.remove("species");
 			}
+			seedBag.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 		}
 		return seed;
 	}
@@ -172,11 +177,11 @@ public class SeedBagItem extends Item {
 		}
 		sorterIndex %= SORTERS.size();
 		tag.putInt("sorter", sorterIndex);
-		sort(seedBag);
+		sort(tag);
+		seedBag.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 	}
 
-	private static void sort(ItemStack seedBag) {
-		CompoundTag tag = seedBag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+	private static void sort(CompoundTag tag) {
 		int sorterIndex = 0;
 		if (tag.contains("sorter")) {
 			sorterIndex = tag.getIntOr("sorter", 0);

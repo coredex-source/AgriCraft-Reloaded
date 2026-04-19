@@ -1,10 +1,8 @@
-﻿{
+{
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "p": {
-      "item": "agricraft:coal_pebble"
-    }
+    "p": "agricraft:coal_pebble"
   },
   "pattern": [
     "ppp",
@@ -15,3 +13,4 @@
     "id": "minecraft:coal"
   }
 }
+

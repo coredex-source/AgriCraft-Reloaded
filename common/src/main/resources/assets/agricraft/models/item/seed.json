@@ -1,7 +1,6 @@
 {
-	"parent": "builtin/entity",
+	"parent": "minecraft:item/generated",
 	"textures": {
-		"layer0": "agricraft:item/seed_unknown"
-	},
-	"gui_light": "front"
+		"layer0": "agricraft:seed/unknown"
+	}
 }

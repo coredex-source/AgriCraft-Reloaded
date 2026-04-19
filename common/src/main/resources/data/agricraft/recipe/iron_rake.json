@@ -1,13 +1,9 @@
-﻿{
+{
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "b": {
-      "item": "minecraft:iron_bars"
-    },
-    "s": {
-      "tag": "agricraft:rods/wooden"
-    }
+    "b": "minecraft:iron_bars",
+    "s": "#agricraft:rods/wooden"
   },
   "pattern": [
     "b",
@@ -17,3 +13,4 @@
     "id": "agricraft:iron_rake"
   }
 }
+

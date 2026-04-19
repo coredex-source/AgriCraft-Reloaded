@@ -1,10 +1,8 @@
-﻿{
+{
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "#": {
-      "tag": "agricraft:obsidian"
-    }
+    "#": "#agricraft:obsidian"
   },
   "pattern": [
     "#",
@@ -15,3 +13,4 @@
     "id": "agricraft:obsidian_crop_sticks"
   }
 }
+

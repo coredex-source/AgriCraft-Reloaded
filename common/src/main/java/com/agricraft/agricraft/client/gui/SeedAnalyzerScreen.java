@@ -42,7 +42,6 @@ public class SeedAnalyzerScreen extends AbstractContainerScreen<SeedAnalyzerMenu
 
 	@Override
 	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-		this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 		super.render(guiGraphics, mouseX, mouseY, partialTick);
 		this.renderTooltip(guiGraphics, mouseX, mouseY);
 	}
@@ -77,9 +76,9 @@ public class SeedAnalyzerScreen extends AbstractContainerScreen<SeedAnalyzerMenu
 		int domw = this.font.width(speciesDomText.getString());
 		int middle = leftPos + this.imageWidth / 2;
 		int sepLength = this.font.width(TEXT_SEPARATOR.getString());
-		guiGraphics.drawString(this.font, TEXT_SEPARATOR, (int) (middle - sepLength / 2F), topPos + 16, 0, false);
-		guiGraphics.drawString(this.font, speciesDomText, (int) (middle - domw - sepLength / 2F - 1), topPos + 16, 0, false);
-		guiGraphics.drawString(this.font, speciesRecText, (int) (middle + sepLength / 2F + 1), topPos + 16, 0, false);
+		guiGraphics.drawString(this.font, TEXT_SEPARATOR, (int) (middle - sepLength / 2F), topPos + 16, 0xFF000000, false);
+		guiGraphics.drawString(this.font, speciesDomText, (int) (middle - domw - sepLength / 2F - 1), topPos + 16, 0xFF000000, false);
+		guiGraphics.drawString(this.font, speciesRecText, (int) (middle + sepLength / 2F + 1), topPos + 16, 0xFF000000, false);
 		// stats genes
 		int DNA_X = leftPos + 90;
 		int yy = topPos + 26;
@@ -98,9 +97,9 @@ public class SeedAnalyzerScreen extends AbstractContainerScreen<SeedAnalyzerMenu
 			Component domText = Component.literal("" + pair.getDominant().trait());
 			Component recText = Component.literal("" + pair.getRecessive().trait());
 			int w = this.font.width(domText.getString());
-			guiGraphics.drawString(this.font, geneText, DNA_X + 36, yy, 0, false);
-			guiGraphics.drawString(this.font, domText, DNA_X - w - 1, yy, 0, false);
-			guiGraphics.drawString(this.font, recText, DNA_X + 21, yy, 0, false);
+			guiGraphics.drawString(this.font, geneText, DNA_X + 36, yy, 0xFF000000, false);
+			guiGraphics.drawString(this.font, domText, DNA_X - w - 1, yy, 0xFF000000, false);
+			guiGraphics.drawString(this.font, recText, DNA_X + 21, yy, 0xFF000000, false);
 			yy += this.font.lineHeight + 4;
 		}
 		// shape of the dna
@@ -109,8 +108,8 @@ public class SeedAnalyzerScreen extends AbstractContainerScreen<SeedAnalyzerMenu
 
 	@Override
 	protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-		guiGraphics.drawString(this.font, this.title, this.titleLabelX + 5, this.titleLabelY, 0x404040, false);
-		guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX + 5, this.inventoryLabelY, 0x404040, false);
+		guiGraphics.drawString(this.font, this.title, this.titleLabelX + 5, this.titleLabelY, 0xFF404040, false);
+		guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX + 5, this.inventoryLabelY, 0xFF404040, false);
 	}
 
 	@Override

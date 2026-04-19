@@ -12,6 +12,9 @@ import com.agricraft.agricraft.common.registry.ModItems;
 import com.agricraft.agricraft.common.util.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -85,8 +88,9 @@ public class CropBlock extends Block implements EntityBlock, BonemealableBlock, 
 	public static final IntegerProperty LIGHT = IntegerProperty.create("light", 0, 16);
 	private static final ItemStack BONE_MEAL = new ItemStack(Items.BONE_MEAL);
 
-	public CropBlock() {
+	public CropBlock(Identifier id) {
 		super(Properties.of()
+				.setId(ResourceKey.create(Registries.BLOCK, id))
 				.mapColor(MapColor.PLANT)
 				.pushReaction(PushReaction.DESTROY)
 				.isRedstoneConductor((state, getter, pos) -> false)
@@ -409,7 +413,12 @@ public class CropBlock extends Block implements EntityBlock, BonemealableBlock, 
 
 	@Override
 	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
-		return AgriApi.getCrop(level, pos).map(crop -> crop.hasPlant() && crop.isFertile() && !crop.isFullyGrown()).orElse(false);
+		return AgriApi.getCrop(level, pos).map(crop -> {
+			boolean hasPlant = crop.hasPlant();
+			boolean isFertile = crop.isFertile();
+			boolean isFullyGrown = crop.isFullyGrown();
+			return hasPlant && isFertile && !isFullyGrown;
+		}).orElse(false);
 	}
 
 	@Override

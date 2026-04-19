@@ -42,7 +42,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			}
 			this.drawScaledText(guiGraphics, seedName, pageX + 30, pageY + 15, scale);
 		} else {
-			guiGraphics.drawString(font, seedName, pageX + 30, pageY + 15, 0, false);
+			guiGraphics.drawString(font, seedName, pageX + 30, pageY + 15, 0xFF000000, false);
 		}
 		// Seed
 		guiGraphics.renderItem(AgriSeedItem.toStack(page.getPlant()), pageX + 8, pageY + 11);

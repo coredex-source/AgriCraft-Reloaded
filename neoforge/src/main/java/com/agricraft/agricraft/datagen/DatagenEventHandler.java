@@ -37,11 +37,9 @@ public class DatagenEventHandler {
 	private static final boolean farmersdelight = true;
 
 	@SubscribeEvent
-	public static void onGatherData(GatherDataEvent event) {
+	public static void onGatherServerData(GatherDataEvent.Server event) {
 		DataGenerator generator = event.getGenerator();
 		boolean include = event.includeDev();
-		// Recipes are now handwritten in common/src/main/resources/data/agricraft/recipes/ using vanilla 1.21.1 format
-		// generator.addProvider(event.includeServer(), (DataProvider.Factory<RecipeProvider>) output -> new ModRecipeProvider(output, event.getLookupProvider()));
 		generator.addProvider(include, (DataProvider.Factory<BlockTagsProvider>) output -> new ModBlockTagProvider(output, event.getLookupProvider(), AgriApi.MOD_ID));
 		generator.addProvider(include, (DataProvider.Factory<ItemTagsProvider>) output -> new ModItemTagProvider(output, event.getLookupProvider(), AgriApi.MOD_ID));
 		generator.addProvider(
@@ -49,17 +47,37 @@ public class DatagenEventHandler {
 				(DataProvider.Factory<DatapackBuiltinEntriesProvider>) output -> new DatapackBuiltinEntriesProvider(
 						output,
 						event.getLookupProvider(),
-						// The objects to generate
 						new RegistrySetBuilder()
 								.add(AgriApi.AGRIPLANTS, PlantsDatagen::registerPlants)
 								.add(AgriApi.AGRISOILS, SoilsDatagen::registerSoils)
 								.add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerMutations)
 								.add(AgriApi.AGRIFERTILIZERS, FertilizersDatagen::registerFertilizers)
 								.add(AgriApi.AGRIWEEDS, WeedsDatagen::registerWeeds),
-						// Generate dynamic registry objects for this mod
 						Set.of("minecraft", AgriApi.MOD_ID)
 				)
 		);
+
+		if (biomesoplenty) {
+			addExtraServerDataProvider("biomesoplenty", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerBiomesOPlenty).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerBiomesOPlenty), event, include);
+		}
+		if (immersiveengineering) {
+			addExtraServerDataProvider("immersiveengineering", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerImmersiveEngineering).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerImmersiveEngineering), event, include);
+		}
+		if (pamhc2crops) {
+			addExtraServerDataProvider("pamhc2crops", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerPamsHarvestCraft2).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerPamsHarvestCraft2), event, include);
+		}
+		if (mysticalagriculture) {
+			addExtraServerDataProvider("mysticalagriculture", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerMysticalAgriculture).add(AgriApi.AGRISOILS, SoilsDatagen::registerMysticalAgriculture).add(AgriApi.AGRIFERTILIZERS, FertilizersDatagen::registerMysticalAgriculture), event, include);
+		}
+		if (farmersdelight) {
+			addExtraServerDataProvider("farmersdelight", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerFarmersDelight).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerFarmersDelight).add(AgriApi.AGRISOILS, SoilsDatagen::registerFarmersDelight), event, include);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onGatherClientData(GatherDataEvent.Client event) {
+		DataGenerator generator = event.getGenerator();
+		boolean include = event.includeDev();
 		addProvider("minecraft", "crop", ModelsDatagen::registerMinecraftPlant, BlockModelBuilder::new, generator, include);
 		addProvider("minecraft", "seed", ModelsDatagen::registerMinecraftSeed, ItemModelBuilder::new, generator, include);
 		addProvider("agricraft", "crop", ModelsDatagen::registerAgricraftPlant, BlockModelBuilder::new, generator, include);
@@ -67,19 +85,19 @@ public class DatagenEventHandler {
 		addProvider("agricraft", "weed", ModelsDatagen::registerAgricraftWeed, BlockModelBuilder::new, generator, include);
 
 		if (biomesoplenty) {
-			addExtraDataPackProvider("biomesoplenty", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerBiomesOPlenty).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerBiomesOPlenty), ModelsDatagen::registerBiomesOPlentyPlant, ModelsDatagen::registerBiomesOPlentySeed, LangDatagen::biomesoplenty, event, include);
+			addExtraClientDataProvider("biomesoplenty", ModelsDatagen::registerBiomesOPlentyPlant, ModelsDatagen::registerBiomesOPlentySeed, LangDatagen::biomesoplenty, generator, include);
 		}
 		if (immersiveengineering) {
-			addExtraDataPackProvider("immersiveengineering", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerImmersiveEngineering).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerImmersiveEngineering), ModelsDatagen::registerImmersiveEngineeringPlant, ModelsDatagen::registerImmersiveEngineeringSeed, LangDatagen::immersiveengineering, event, include);
+			addExtraClientDataProvider("immersiveengineering", ModelsDatagen::registerImmersiveEngineeringPlant, ModelsDatagen::registerImmersiveEngineeringSeed, LangDatagen::immersiveengineering, generator, include);
 		}
 		if (pamhc2crops) {
-			addExtraDataPackProvider("pamhc2crops", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerPamsHarvestCraft2).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerPamsHarvestCraft2), ModelsDatagen::registerPamsHarvestCraft2Plant, ModelsDatagen::registerPamsHarvestCraft2Seed, LangDatagen::pamhc2crops, event, include);
+			addExtraClientDataProvider("pamhc2crops", ModelsDatagen::registerPamsHarvestCraft2Plant, ModelsDatagen::registerPamsHarvestCraft2Seed, LangDatagen::pamhc2crops, generator, include);
 		}
 		if (mysticalagriculture) {
-			addExtraDataPackProvider("mysticalagriculture", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerMysticalAgriculture).add(AgriApi.AGRISOILS, SoilsDatagen::registerMysticalAgriculture).add(AgriApi.AGRIFERTILIZERS, FertilizersDatagen::registerMysticalAgriculture), ModelsDatagen::registerMysticalAgriculturePlant, ModelsDatagen::registerMysticalAgricultureSeed, LangDatagen::mysticalagriculture, event, include);
+			addExtraClientDataProvider("mysticalagriculture", ModelsDatagen::registerMysticalAgriculturePlant, ModelsDatagen::registerMysticalAgricultureSeed, LangDatagen::mysticalagriculture, generator, include);
 		}
 		if (farmersdelight) {
-			addExtraDataPackProvider("farmersdelight", new RegistrySetBuilder().add(AgriApi.AGRIPLANTS, PlantsDatagen::registerFarmersDelight).add(AgriApi.AGRIMUTATIONS, MutationsDatagen::registerFarmersDelight).add(AgriApi.AGRISOILS, SoilsDatagen::registerFarmersDelight), ModelsDatagen::registerFarmersDelightPlant, ModelsDatagen::registerFarmersDelightSeed, LangDatagen::farmersdelight, event, include);
+			addExtraClientDataProvider("farmersdelight", ModelsDatagen::registerFarmersDelightPlant, ModelsDatagen::registerFarmersDelightSeed, LangDatagen::farmersdelight, generator, include);
 		}
 	}
 
@@ -97,8 +115,7 @@ public class DatagenEventHandler {
 		});
 	}
 
-	private static void addExtraDataPackProvider(String modid, RegistrySetBuilder registrySetBuilder, Consumer<ModelProvider<BlockModelBuilder>> blockModels,
-	                                             Consumer<ModelProvider<ItemModelBuilder>> seedModels, Consumer<LanguageProvider> translations, GatherDataEvent event, boolean include) {
+	private static void addExtraServerDataProvider(String modid, RegistrySetBuilder registrySetBuilder, GatherDataEvent event, boolean include) {
 		DataGenerator generator = event.getGenerator();
 		PackOutput dataOutput = generator.getPackOutput("datapacks/" + modid);
 		generator.addProvider(include, (DataProvider.Factory<PackMetadataGenerator>) output -> new PackMetadataGenerator(dataOutput) {
@@ -115,6 +132,10 @@ public class DatagenEventHandler {
 					}
 				}
 		);
+	}
+
+	private static void addExtraClientDataProvider(String modid, Consumer<ModelProvider<BlockModelBuilder>> blockModels,
+	                                               Consumer<ModelProvider<ItemModelBuilder>> seedModels, Consumer<LanguageProvider> translations, DataGenerator generator, boolean include) {
 		PackOutput resourceOutput = generator.getPackOutput("resourcepacks/" + modid);
 		generator.addProvider(include, (DataProvider.Factory<PackMetadataGenerator>) output -> new PackMetadataGenerator(resourceOutput) {
 			@Override

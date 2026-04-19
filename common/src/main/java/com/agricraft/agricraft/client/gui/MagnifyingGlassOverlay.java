@@ -8,7 +8,8 @@ import com.agricraft.agricraft.common.registry.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -138,12 +139,16 @@ public class MagnifyingGlassOverlay {
 		inspectable.get().addMagnifyingTooltip(tooltip, mc.player.isShiftKeyDown());
 
 		if (!tooltip.isEmpty()) {
+			List<ClientTooltipComponent> clientTooltip = tooltip.stream()
+					.map(Component::getVisualOrderText)
+					.map(ClientTooltipComponent::create)
+					.toList();
 			int tooltipHeight = 8;
 			if (tooltip.size() > 1) {
 				tooltipHeight += 2; // gap between title lines and next lines
 				tooltipHeight += (tooltip.size() - 1) * 10;
 			}
-			graphics.setComponentTooltipForNextFrame(mc.font, tooltip, posX - TooltipRenderUtil.MOUSE_OFFSET, posY - tooltipHeight / 2 + 12);
+			graphics.renderTooltip(mc.font, clientTooltip, posX, posY - tooltipHeight / 2 + 12, DefaultTooltipPositioner.INSTANCE, null);
 		}
 
 	}

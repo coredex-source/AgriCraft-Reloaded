@@ -14,6 +14,26 @@
 			"type": "directory",
 			"source": "weed",
 			"prefix": "weed/"
+		},
+		{
+			"type": "single",
+			"resource": "agricraft:block/wooden_crop_sticks"
+		},
+		{
+			"type": "single",
+			"resource": "agricraft:block/iron_crop_sticks"
+		},
+		{
+			"type": "single",
+			"resource": "agricraft:block/obsidian_crop_sticks"
+		},
+		{
+			"type": "single",
+			"resource": "agricraft:block/seed_analyzer_base"
+		},
+		{
+			"type": "single",
+			"resource": "agricraft:block/seed_analyzer_pane"
 		}
 	]
 }

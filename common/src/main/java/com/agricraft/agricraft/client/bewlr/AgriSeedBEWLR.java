@@ -35,7 +35,7 @@ public class AgriSeedBEWLR implements SpecialModelRenderer<String> {
 	@Override
 	public void submit(String species, ItemDisplayContext itemDisplayContext, PoseStack poseStack, SubmitNodeCollector collector, int packedLight, int packedOverlay, boolean hasFoil, int seed) {
 		BlockStateModel seedModel = AgriClientApi.getSeedModel(species);
-		collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), seedModel, 1.0F, 1.0F, 1.0F, packedLight, packedOverlay, -1);
+		collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), seedModel, 1.0F, 1.0F, 1.0F, packedLight, packedOverlay, 0);
 	}
 
 	@Override

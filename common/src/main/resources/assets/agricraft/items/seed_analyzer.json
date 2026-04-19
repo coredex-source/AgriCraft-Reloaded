@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "model":  "agricraft:item/seed_analyzer",
+                  "type":  "minecraft:model"
+              }
+}

@@ -1,10 +1,8 @@
-﻿{
+{
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "#": {
-      "tag": "agricraft:nuggets/iron"
-    }
+    "#": "#agricraft:nuggets/iron"
   },
   "pattern": [
     "#",
@@ -15,3 +13,4 @@
     "id": "agricraft:iron_crop_sticks"
   }
 }
+

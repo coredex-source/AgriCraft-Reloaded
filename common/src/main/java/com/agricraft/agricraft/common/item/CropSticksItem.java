@@ -20,10 +20,10 @@ public class CropSticksItem extends BlockItem {
 
 	private final CropStickVariant variant;
 
-	public CropSticksItem(Block block, CropStickVariant variant) {
+	public CropSticksItem(Block block, CropStickVariant variant, Item.Properties properties) {
 		super(block, (variant == CropStickVariant.IRON || variant == CropStickVariant.OBSIDIAN
-				? new Item.Properties().fireResistant()
-				: new Item.Properties())
+				? properties.fireResistant()
+				: properties)
 				.overrideDescription("item.agricraft." + variant.getSerializedName() + "_crop_sticks"));
 		this.variant = variant;
 	}

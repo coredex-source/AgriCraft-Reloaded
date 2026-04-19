@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "model":  "agricraft:item/wooden_rake",
+                  "type":  "minecraft:model"
+              }
+}

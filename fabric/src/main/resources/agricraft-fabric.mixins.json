@@ -8,7 +8,8 @@
 		"BucketItemMixin"
 	],
 	"client": [
-		"MouseHandlerMixin"
+		"MouseHandlerMixin",
+		"SpecialModelRenderersAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

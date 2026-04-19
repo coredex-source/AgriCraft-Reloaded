@@ -1,10 +1,8 @@
-﻿{
+{
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "s": {
-      "item": "agricraft:quartz_shard"
-    }
+    "s": "agricraft:quartz_shard"
   },
   "pattern": [
     "sss",
@@ -15,3 +13,4 @@
     "id": "minecraft:quartz"
   }
 }
+

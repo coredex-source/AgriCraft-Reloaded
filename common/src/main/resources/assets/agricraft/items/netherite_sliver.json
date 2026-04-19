@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "model":  "agricraft:item/netherite_sliver",
+                  "type":  "minecraft:model"
+              }
+}

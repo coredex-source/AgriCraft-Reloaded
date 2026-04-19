@@ -28,7 +28,7 @@ public interface JournalPageDrawer<T extends JournalPage> {
 	default int drawScaledText(GuiGraphics guiGraphics, Component component, float x, float y, float scale) {
 		guiGraphics.pose().pushMatrix();
 		guiGraphics.pose().scale(scale, scale);
-		guiGraphics.drawWordWrap(Minecraft.getInstance().font, component, (int) (x / scale), (int) (y / scale), (int) (PAGE_WIDTH / scale), 0);
+		guiGraphics.drawWordWrap(Minecraft.getInstance().font, component, (int) (x / scale), (int) (y / scale), (int) (PAGE_WIDTH / scale), 0xFF000000, false);
 		guiGraphics.pose().popMatrix();
 		return (int) (Minecraft.getInstance().font.wordWrapHeight(component, (int) (PAGE_WIDTH / scale)) * scale);
 	}

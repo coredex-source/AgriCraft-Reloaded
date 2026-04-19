@@ -1,6 +1,7 @@
 {
 	"ambientocclusion": false,
 	"textures": {
+		"crop": "agricraft:seed/unknown",
 		"particle": "#crop"
 	},
 	"elements": [

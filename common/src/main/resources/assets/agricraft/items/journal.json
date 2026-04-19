@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "model":  "agricraft:item/journal",
+                  "type":  "minecraft:model"
+              }
+}

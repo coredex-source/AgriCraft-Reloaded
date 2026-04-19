@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "model":  "agricraft:item/seed_bag",
+                  "type":  "minecraft:model"
+              }
+}

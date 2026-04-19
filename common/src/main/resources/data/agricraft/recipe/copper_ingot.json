@@ -1,10 +1,8 @@
-﻿{
+{
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "n": {
-      "item": "agricraft:copper_nugget"
-    }
+    "n": "agricraft:copper_nugget"
   },
   "pattern": [
     "nnn",
@@ -15,3 +13,4 @@
     "id": "minecraft:copper_ingot"
   }
 }
+

@@ -52,7 +52,7 @@ public class IntroductionPageDrawer implements JournalPageDrawer<IntroductionPag
 		float dx = pageX + 6;
 		float spacing = 4;
 		// Title
-		guiGraphics.drawString(font, INTRODUCTION, (int) dx, (int) dy, 0, false);
+		guiGraphics.drawString(font, INTRODUCTION, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 		// First paragraph

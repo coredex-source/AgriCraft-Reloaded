@@ -5,6 +5,9 @@ import com.agricraft.agricraft.common.registry.ModBlocks;
 import com.agricraft.agricraft.common.util.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,8 +40,8 @@ public class SeedAnalyzerBlock extends Block implements EntityBlock {
 	public static final BooleanProperty JOURNAL = BooleanProperty.create("journal");
 	private static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 4, 15);
 
-	public SeedAnalyzerBlock() {
-		super(Properties.of().mapColor(MapColor.WOOD).strength(2, 3).noOcclusion());
+	public SeedAnalyzerBlock(Identifier id) {
+		super(Properties.of().setId(ResourceKey.create(Registries.BLOCK, id)).mapColor(MapColor.WOOD).strength(2, 3).noOcclusion());
 		this.registerDefaultState(this.stateDefinition.any()
 				.setValue(JOURNAL, false)
 				.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));

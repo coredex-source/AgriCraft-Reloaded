@@ -41,6 +41,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -82,9 +83,14 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 			int growthIndex = input.getIntOr("growthIndex", 0);
 			int growthTotal = input.getIntOr("growthTotal", 0);
 			this.growthStage = new AgriGrowthStage(growthIndex, growthTotal);
-			if (plant == null && level != null) {
+			if (level != null) {
 				this.plant = AgriApi.getPlant(this.plantId, this.level.registryAccess()).orElse(null);
 			}
+		} else {
+			this.genome = null;
+			this.plantId = "";
+			this.plant = null;
+			this.growthStage = null;
 		}
 		boolean hasWeeds = input.getBooleanOr("hasWeeds", false);
 		if (hasWeeds) {
@@ -92,9 +98,13 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 			int weedGrowthIndex = input.getIntOr("weedGrowthIndex", 0);
 			int weedGrowthTotal = input.getIntOr("weedGrowthTotal", 0);
 			this.weedGrowthStage = new AgriGrowthStage(weedGrowthIndex, weedGrowthTotal);
-			if (weed == null && level != null) {
+			if (level != null) {
 				this.weed = AgriApi.getWeed(this.weedId, this.level.registryAccess()).orElse(null);
 			}
+		} else {
+			this.weedId = "";
+			this.weed = null;
+			this.weedGrowthStage = null;
 		}
 	}
 

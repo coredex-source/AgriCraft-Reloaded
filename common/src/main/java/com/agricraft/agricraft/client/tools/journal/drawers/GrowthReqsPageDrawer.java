@@ -37,7 +37,7 @@ public class GrowthReqsPageDrawer implements JournalPageDrawer<GrowthReqsPage> {
 		float spacing = 4;
 
 		// Title
-		guiGraphics.drawString(font, GROWTH_REQS, (int) dx, (int) dy, 0, false);
+		guiGraphics.drawString(font, GROWTH_REQS, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 		// First paragraph

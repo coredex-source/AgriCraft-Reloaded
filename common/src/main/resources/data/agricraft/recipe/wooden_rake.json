@@ -1,13 +1,9 @@
-﻿{
+{
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "f": {
-      "tag": "agricraft:fences/wooden"
-    },
-    "s": {
-      "tag": "agricraft:rods/wooden"
-    }
+    "f": "#agricraft:fences/wooden",
+    "s": "#agricraft:rods/wooden"
   },
   "pattern": [
     "f",
@@ -17,3 +13,4 @@
     "id": "agricraft:wooden_rake"
   }
 }
+

@@ -9,6 +9,10 @@ base {
 
 loom {
 	accessWidenerPath = file("src/main/resources/agricraft-fabric.accesswidener")
+	mixin {
+		useLegacyMixinAp = true
+		defaultRefmapName = "agricraft-fabric-refmap.json"
+	}
 }
 
 configurations {

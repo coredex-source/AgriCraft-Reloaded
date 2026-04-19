@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "model":  "agricraft:item/iron_crop_sticks",
+                  "type":  "minecraft:model"
+              }
+}

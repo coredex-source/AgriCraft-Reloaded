@@ -4,6 +4,10 @@ architectury {
 
 loom {
 	accessWidenerPath = file("src/main/resources/agricraft.accesswidener")
+	mixin {
+		useLegacyMixinAp = true
+		defaultRefmapName = "agricraft-common-refmap.json"
+	}
 }
 
 dependencies {

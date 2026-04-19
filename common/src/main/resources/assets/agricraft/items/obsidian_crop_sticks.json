@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "model":  "agricraft:item/obsidian_crop_sticks",
+                  "type":  "minecraft:model"
+              }
+}

@@ -114,17 +114,12 @@ public class ModelsDatagen {
 	}
 
 	public static void registerMinecraftSeed(ModelProvider<ItemModelBuilder> m) {
-		List.of("allium", "azure_bluet", "bamboo", "blue_orchid", "brown_mushroom", "cactus", "carrot",
-						"cornflower", "crimson_fungus", "dandelion", "kelp", "lily_of_the_valley", "nether_wart",
-						"orange_tulip", "oxeye_daisy", "pink_tulip", "poppy", "potato", "red_mushroom",
-						"red_tulip", "seagrass", "sea_pickle", "sugar_cane", "sweet_berries", "warped_fungus",
-						"white_tulip", "wither_rose", "unknown")
+		List.of("allium", "azure_bluet", "bamboo", "beetroot", "blue_orchid", "brown_mushroom", "cactus", "carrot",
+						"cornflower", "crimson_fungus", "dandelion", "kelp", "lily_of_the_valley", "melon", "nether_wart",
+						"orange_tulip", "oxeye_daisy", "pink_tulip", "poppy", "potato", "pumpkin", "red_mushroom",
+						"red_tulip", "seagrass", "sea_pickle", "sugar_cane", "sweet_berries", "torchflower", "warped_fungus",
+						"wheat", "white_tulip", "wither_rose", "unknown")
 				.forEach(name -> m.withExistingParent(name, "minecraft:item/generated").texture("layer0", "agricraft:seed/" + name));
-		m.withExistingParent("beetroot", "minecraft:item/beetroot_seeds");
-		m.withExistingParent("melon", "minecraft:item/melon_seeds");
-		m.withExistingParent("pumpkin", "minecraft:item/pumpkin_seeds");
-		m.withExistingParent("torchflower", "minecraft:item/torchflower_seeds");
-		m.withExistingParent("wheat", "minecraft:item/wheat_seeds");
 	}
 
 	public static void registerAgricraftPlant(ModelProvider<BlockModelBuilder> m) {

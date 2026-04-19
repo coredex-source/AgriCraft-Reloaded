@@ -1,0 +1,9 @@
+{
+    "model": {
+        "type": "minecraft:special",
+        "base": "agricraft:item/seed_base",
+        "model": {
+            "type": "agricraft:seed"
+        }
+    }
+}

@@ -3,8 +3,10 @@ package com.agricraft.agricraft.client;
 import com.agricraft.agricraft.api.AgriApi;
 import com.agricraft.agricraft.client.ber.CropBlockEntityRenderer;
 import com.agricraft.agricraft.client.ber.SeedAnalyzerEntityRenderer;
+import com.agricraft.agricraft.client.bewlr.AgriSeedBEWLR;
 import com.agricraft.agricraft.client.gui.MagnifyingGlassOverlay;
 import com.agricraft.agricraft.client.gui.SeedAnalyzerScreen;
+import com.agricraft.agricraft.fabric.mixin.SpecialModelRenderersAccessor;
 import com.agricraft.agricraft.common.registry.ModBlockEntityTypes;
 import com.agricraft.agricraft.common.registry.ModBlocks;
 import com.agricraft.agricraft.common.registry.ModMenus;
@@ -51,6 +53,7 @@ public class AgriCraftFabricClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		SpecialModelRenderersAccessor.agricraft$getIdMapper().put(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "seed"), AgriSeedBEWLR.Unbaked.MAP_CODEC);
 		PlatformClient.setup(new FabricPlatformClient());
 		AgriCraftClient.init();
 		ModelLoadingPlugin.register(pluginContext -> {
