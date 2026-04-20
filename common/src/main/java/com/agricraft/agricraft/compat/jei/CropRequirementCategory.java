@@ -11,9 +11,6 @@ import com.agricraft.agricraft.common.item.AgriSeedItem;
 import com.agricraft.agricraft.common.util.LangUtils;
 import com.agricraft.agricraft.common.util.Platform;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -26,18 +23,13 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.core.BlockPos;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -103,13 +95,13 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 
 
 	@Override
-	public void draw(CropRequirementCategory.Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+	public void draw(CropRequirementCategory.Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
 		BACKGROUND.draw(guiGraphics, 0, 0);
 		// render buttons
-		recipe.incStrButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
-		recipe.decStrButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
-		recipe.incStageButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
-		recipe.decStageButton.render(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.incStrButton.extractRenderState(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.decStrButton.extractRenderState(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.incStageButton.extractRenderState(guiGraphics, (int) mouseX, (int) mouseY, 0);
+		recipe.decStageButton.extractRenderState(guiGraphics, (int) mouseX, (int) mouseY, 0);
 		// render strength increment
 		for (int i = 0; i < recipe.currentStrength; ++i) {
 			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, COMPONENTS, 105, 66 - i * 5, 0, 66, 7, 3, 128, 128);
@@ -185,30 +177,17 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 			recipe.tick();
 			lastTime = l;
 		}
-		PoseStack stack = new PoseStack();
-		stack.pushPose();
-		Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_FLAT);
-		stack.translate(56, 53, 0);
-		stack.translate(-4, 12, 0);
-		stack.scale(16, -16, 1);
-		stack.mulPose(Axis.XP.rotationDegrees(45));
-		stack.mulPose(Axis.YP.rotationDegrees(45));
-		MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-		// render soil
+		// render soil as item icon
 		if (!recipe.soils.isEmpty() && recipe.soil < recipe.soils.size()) {
-			stack.pushPose();
-			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(recipe.soils.get(recipe.soil).defaultBlockState(), stack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-			stack.popPose();
+			guiGraphics.item(new ItemStack(recipe.soils.get(recipe.soil)), 48, 57);
 		}
-		// render plant
+		// render plant as 2D sprite
 		BlockStateModel model = AgriClientApi.getPlantModel(recipe.plantId, recipe.currentStage.index());
-		stack.pushPose();
-		stack.translate(0, 1, 0);
-		ModelBlockRenderer.renderModel(stack.last(), bufferSource.getBuffer(RenderTypes.cutoutMovingBlock()), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-		stack.popPose();
-		// TODO: @ketheroth display block below requirement
-		bufferSource.endBatch();
-		stack.popPose();
+		if (model != null) {
+			TextureAtlasSprite sprite = model.particleMaterial().sprite();
+			guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, 48, 41, 16, 16);
+		}
+		// TODO: restore 3D block rendering when the new 26.1.2 rendering API is better understood
 	}
 
 	@Override
@@ -380,7 +359,7 @@ public class CropRequirementCategory implements IRecipeCategory<CropRequirementC
 		}
 
 		@Override
-		protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
 			int vOffset = isIncrement ? 9 : 0;
 			int uOffset = this.getUOffset();
 			this.isHovered = this.getX() <= mouseX && mouseX < this.getX() + this.getWidth() && this.getY() <= mouseY && mouseY < this.getY() + this.getHeight();

@@ -3,7 +3,7 @@ package com.agricraft.agricraft.common.util.neoforge;
 import com.agricraft.agricraft.client.neoforge.AgriCraftNeoForgeClient;
 import com.agricraft.agricraft.common.util.PlatformClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 

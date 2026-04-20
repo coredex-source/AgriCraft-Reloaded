@@ -22,7 +22,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -84,7 +83,7 @@ public class AgriGrowthConditionRegistry extends AgriRegistry<AgriGrowthConditio
 					if (blockCondition.states().isEmpty()) {
 						return AgriGrowthResponse.FERTILE;
 					}
-					Set<String> list = blockstate.getValues().entrySet().stream().map(StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.toSet());
+					Set<String> list = blockstate.getValues().map(v -> v.property().getName() + "=" + v.valueName()).collect(Collectors.toSet());
 					if (list.containsAll(blockCondition.states())) {
 						return AgriGrowthResponse.FERTILE;
 					}
@@ -148,7 +147,7 @@ public class AgriGrowthConditionRegistry extends AgriRegistry<AgriGrowthConditio
 					if (fluidCondition.states().isEmpty()) {
 						return AgriGrowthResponse.FERTILE;
 					}
-					Set<String> list = fluid.getValues().entrySet().stream().map(StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.toSet());
+					Set<String> list = fluid.getValues().map(v -> v.property().getName() + "=" + v.valueName()).collect(Collectors.toSet());
 					return list.containsAll(fluidCondition.states()) ? AgriGrowthResponse.FERTILE : AgriGrowthResponse.LETHAL;
 				}
 				return fluid.is(Fluids.LAVA) ? AgriGrowthResponse.FERTILE : AgriGrowthResponse.LETHAL;

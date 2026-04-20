@@ -16,7 +16,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
@@ -109,7 +109,7 @@ public class AgriCraftJeiPlugin implements IModPlugin {
 			}
 
 			@Override
-			public void draw(GuiGraphics guiGraphics, int xOffset, int yOffset) {
+			public void draw(GuiGraphicsExtractor guiGraphics, int xOffset, int yOffset) {
 				guiGraphics.blit(RenderPipelines.GUI_TEXTURED, location, xOffset, yOffset, uOffset, vOffset, getWidth(), getHeight(), textureWidth, textureHeight);
 			}
 		};

@@ -11,7 +11,7 @@ import com.agricraft.agricraft.common.item.journal.PlantPage;
 import com.agricraft.agricraft.common.util.LangUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
@@ -27,7 +27,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 	private static final Component MUTATIONS = Component.translatable("agricraft.journal.mutations");
 
 	@Override
-	public void drawLeftSheet(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawLeftSheet(GuiGraphicsExtractor guiGraphics, PlantPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 		// Title
 		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 4, pageY + 9, 0, 56, 128, 20, 128, 128);
@@ -42,10 +42,10 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 			}
 			this.drawScaledText(guiGraphics, seedName, pageX + 30, pageY + 15, scale);
 		} else {
-			guiGraphics.drawString(font, seedName, pageX + 30, pageY + 15, 0xFF000000, false);
+			guiGraphics.text(font, seedName, pageX + 30, pageY + 15, 0xFF000000, false);
 		}
 		// Seed
-		guiGraphics.renderItem(AgriSeedItem.toStack(page.getPlant()), pageX + 8, pageY + 11);
+		guiGraphics.item(AgriSeedItem.toStack(page.getPlant()), pageX + 8, pageY + 11);
 		// Description
 		Component plantDescription = LangUtils.plantDescription(plantId);
 		float offset = 0.0F;
@@ -59,12 +59,12 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 	}
 
 	@Override
-	public void drawRightSheet(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawRightSheet(GuiGraphicsExtractor guiGraphics, PlantPage page, int pageX, int pageY, JournalData journalData) {
 		// Mutations
 		this.drawMutations(guiGraphics, page, pageX, pageY);
 	}
 
-	protected int drawGrowthRequirements(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY, float yOffset) {
+	protected int drawGrowthRequirements(GuiGraphicsExtractor guiGraphics, PlantPage page, int pageX, int pageY, float yOffset) {
 		float dy = pageY + Math.max(yOffset, 60);
 		dy += this.drawScaledText(guiGraphics, GROWTH_REQUIREMENTS, pageX + 10, dy, 0.80F) + 1;
 		// Light level
@@ -132,21 +132,21 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 		return (int) (dy + 13);
 	}
 
-	protected void drawProducts(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY) {
+	protected void drawProducts(GuiGraphicsExtractor guiGraphics, PlantPage page, int pageX, int pageY) {
 		this.drawScaledText(guiGraphics, PRODUCTS, pageX + 10, pageY + 10, 0.80F);
 		for (int i = 0; i < page.getProducts().size(); i++) {
 			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10 + i * 20, pageY + 19, 0, 76, 18, 18, 128, 128);
-			guiGraphics.renderItem(page.getProducts().get(i), pageX + 11 + i * 20, pageY + 20);
+			guiGraphics.item(page.getProducts().get(i), pageX + 11 + i * 20, pageY + 20);
 		}
 	}
 
-	protected void drawMutations(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY) {
+	protected void drawMutations(GuiGraphicsExtractor guiGraphics, PlantPage page, int pageX, int pageY) {
 		this.drawScaledText(guiGraphics, MUTATIONS, pageX + 10, pageY + 15, 0.80F);
 		for (List<Identifier> plants : page.getMutationsOnPage()) {
 			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, pageX + 10, pageY + 24, 0, 76, 86, 18, 128, 128);
-			TextureAtlasSprite parent1 = AgriClientApi.getPlantModel(plants.get(0), AgriApi.getPlant(plants.get(0)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleIcon();
-			TextureAtlasSprite parent2 = AgriClientApi.getPlantModel(plants.get(1), AgriApi.getPlant(plants.get(1)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleIcon();
-			TextureAtlasSprite child = AgriClientApi.getPlantModel(plants.get(2), AgriApi.getPlant(plants.get(2)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleIcon();
+			TextureAtlasSprite parent1 = AgriClientApi.getPlantModel(plants.get(0), AgriApi.getPlant(plants.get(0)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleMaterial().sprite();
+			TextureAtlasSprite parent2 = AgriClientApi.getPlantModel(plants.get(1), AgriApi.getPlant(plants.get(1)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleMaterial().sprite();
+			TextureAtlasSprite child = AgriClientApi.getPlantModel(plants.get(2), AgriApi.getPlant(plants.get(2)).map(plant -> plant.getInitialGrowthStage().total() - 1).orElse(0)).particleMaterial().sprite();
 			guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, parent1, pageX + 11, pageY + 25, 16, 16);
 			guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, parent2, pageX + 45, pageY + 25, 16, 16);
 			guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, child, pageX + 79, pageY + 25, 16, 16);
@@ -155,7 +155,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 	}
 
 	@Override
-	public void drawLeftTooltip(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY, int mouseX, int mouseY) {
+	public void drawLeftTooltip(GuiGraphicsExtractor guiGraphics, PlantPage page, int pageX, int pageY, int mouseX, int mouseY) {
 		Font font = Minecraft.getInstance().font;
 		String plantId = AgriApi.getPlantId(page.getPlant()).map(Identifier::toString).orElse("");
 		Component plantName = LangUtils.plantName(plantId);
@@ -233,7 +233,7 @@ public class PlantPageDrawer implements JournalPageDrawer<PlantPage> {
 	}
 
 	@Override
-	public void drawRightTooltip(GuiGraphics guiGraphics, PlantPage page, int pageX, int pageY, int mouseX, int mouseY) {
+	public void drawRightTooltip(GuiGraphicsExtractor guiGraphics, PlantPage page, int pageX, int pageY, int mouseX, int mouseY) {
 		Font font = Minecraft.getInstance().font;
 		// mutation tooltips
 		int y = 0;

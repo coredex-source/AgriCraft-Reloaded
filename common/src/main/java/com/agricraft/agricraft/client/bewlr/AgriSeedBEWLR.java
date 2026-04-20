@@ -6,13 +6,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -33,9 +37,11 @@ public class AgriSeedBEWLR implements SpecialModelRenderer<String> {
 	}
 
 	@Override
-	public void submit(String species, ItemDisplayContext itemDisplayContext, PoseStack poseStack, SubmitNodeCollector collector, int packedLight, int packedOverlay, boolean hasFoil, int seed) {
+	public void submit(String species, PoseStack poseStack, SubmitNodeCollector collector, int packedLight, int packedOverlay, boolean hasFoil, int seed) {
 		BlockStateModel seedModel = AgriClientApi.getSeedModel(species);
-		collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), seedModel, 1.0F, 1.0F, 1.0F, packedLight, packedOverlay, 0);
+		List<BlockStateModelPart> parts = new ArrayList<>();
+		seedModel.collectParts(RandomSource.create(seed), parts);
+		collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), parts, new int[]{-1}, packedLight, packedOverlay, 0);
 	}
 
 	@Override
@@ -44,11 +50,11 @@ public class AgriSeedBEWLR implements SpecialModelRenderer<String> {
 		extents.accept(MAX);
 	}
 
-	public record Unbaked() implements SpecialModelRenderer.Unbaked {
+	public record Unbaked() implements SpecialModelRenderer.Unbaked<String> {
 		public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(new Unbaked());
 
 		@Override
-		public SpecialModelRenderer<?> bake(SpecialModelRenderer.BakingContext context) {
+		public SpecialModelRenderer<String> bake(SpecialModelRenderer.BakingContext context) {
 			return INSTANCE;
 		}
 

@@ -1,6 +1,6 @@
 package com.agricraft.agricraft.common.util;
 
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.resources.Identifier;
 
 public abstract class PlatformClient {

@@ -10,7 +10,7 @@ import com.agricraft.agricraft.common.item.journal.GrowthReqsPage;
 import com.agricraft.agricraft.common.util.LangUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 
@@ -30,14 +30,14 @@ public class GrowthReqsPageDrawer implements JournalPageDrawer<GrowthReqsPage> {
 	private final Component PARAGRAPH_SEASONS = Component.translatable("agricraft.journal.growth_reqs.seasons.desc");
 
 	@Override
-	public void drawLeftSheet(GuiGraphics guiGraphics, GrowthReqsPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawLeftSheet(GuiGraphicsExtractor guiGraphics, GrowthReqsPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 		float dx = pageX + 6;
 		float dy = pageY + 10;
 		float spacing = 4;
 
 		// Title
-		guiGraphics.drawString(font, GROWTH_REQS, (int) dx, (int) dy, 0xFF000000, false);
+		guiGraphics.text(font, GROWTH_REQS, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 		// First paragraph
@@ -58,7 +58,7 @@ public class GrowthReqsPageDrawer implements JournalPageDrawer<GrowthReqsPage> {
 	}
 
 	@Override
-	public void drawRightSheet(GuiGraphics guiGraphics, GrowthReqsPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawRightSheet(GuiGraphicsExtractor guiGraphics, GrowthReqsPage page, int pageX, int pageY, JournalData journalData) {
 		float dx = pageX + 6;
 		float dy = pageY + 10;
 		float spacing = 4;
@@ -90,7 +90,7 @@ public class GrowthReqsPageDrawer implements JournalPageDrawer<GrowthReqsPage> {
 		}
 	}
 
-	protected float drawSoilProperties(GuiGraphics guiGraphics, float dx, float dy, float spacing, String property, AgriSoilValue[] properties, int[] offsets, int textureOffsetY) {
+	protected float drawSoilProperties(GuiGraphicsExtractor guiGraphics, float dx, float dy, float spacing, String property, AgriSoilValue[] properties, int[] offsets, int textureOffsetY) {
 		for (int i = 0; i < properties.length - 1; i++) {
 			int width = offsets[i + 1] - offsets[i];
 			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, (int) dx, (int) (dy), offsets[i], textureOffsetY, width, 12, 128, 128);

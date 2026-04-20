@@ -343,7 +343,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 			return;
 		}
 		for (int trials = (this.genome.getGain() + 3) / 3; trials > 0; --trials) {
-			this.plant.getHarvestProducts(addToHarvest, this.growthStage, this.genome, this.level.random);
+			this.plant.getHarvestProducts(addToHarvest, this.growthStage, this.genome, this.level.getRandom());
 		}
 	}
 
@@ -352,7 +352,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 		if (!this.hasPlant() || !this.isFullyGrown()) {
 			return;
 		}
-		this.plant.getClipProducts(addToClipping, clipper, this.growthStage, this.genome, this.level.random);
+		this.plant.getClipProducts(addToClipping, clipper, this.growthStage, this.genome, this.level.getRandom());
 	}
 
 	@Override
@@ -378,7 +378,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 			this.executeWeedsGrowthTick();
 		} else if (this.getBlockState().getValue(CropBlock.CROP_STATE) == CropState.DOUBLE_STICKS) {
 			// mutation tick
-			AgriApi.getMutationHandler().getActiveCrossBreedEngine().handleCrossBreedTick(this, this.streamNeighbours(), this.level.random);
+			AgriApi.getMutationHandler().getActiveCrossBreedEngine().handleCrossBreedTick(this, this.streamNeighbours(), this.level.getRandom());
 		} else {
 			if (!this.hasPlant()) {
 				return;
@@ -406,7 +406,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 		if (CoreConfig.disableFertilizerWeeds) {
 			// Skip weed activation, directly grow or mutate
 			if (this.getBlockState().getValue(CropBlock.CROP_STATE) == CropState.DOUBLE_STICKS) {
-				AgriApi.getMutationHandler().getActiveCrossBreedEngine().handleCrossBreedTick(this, this.streamNeighbours(), this.level.random);
+				AgriApi.getMutationHandler().getActiveCrossBreedEngine().handleCrossBreedTick(this, this.streamNeighbours(), this.level.getRandom());
 			} else if (this.hasPlant()) {
 				AgriGrowthResponse fertility = this.getFertilityResponse();
 				if (fertility.isInstantKill()) {
@@ -417,7 +417,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 				} else if (fertility.isFertile()) {
 					// Guarantee growth advancement (no random chance) when fertilized
 					if (!this.isFullyGrown()) {
-						this.setGrowthStage(this.growthStage.getNext(this, this.level.random));
+						this.setGrowthStage(this.growthStage.getNext(this, this.level.getRandom()));
 						this.getPlant().onGrowth(this);
 					}
 				}
@@ -507,7 +507,7 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 
 	protected void revertGrowthStage() {
 		AgriGrowthStage current = this.growthStage;
-		AgriGrowthStage prev = this.growthStage.getPrevious(this, this.level.random);
+		AgriGrowthStage prev = this.growthStage.getPrevious(this, this.level.getRandom());
 		if (current.equals(prev)) {
 			this.removeGenome();
 		} else {
@@ -523,9 +523,9 @@ public class CropBlockEntity extends BlockEntity implements AgriCrop, Magnifying
 			return;
 		}
 		double a = this.calculateGrowthRate();
-		double b = this.level.random.nextDouble();
+		double b = this.level.getRandom().nextDouble();
 		if (a > b) {
-			this.setGrowthStage(this.growthStage.getNext(this, this.level.random));
+			this.setGrowthStage(this.growthStage.getNext(this, this.level.getRandom()));
 			this.getPlant().onGrowth(this);
 		}
 	}

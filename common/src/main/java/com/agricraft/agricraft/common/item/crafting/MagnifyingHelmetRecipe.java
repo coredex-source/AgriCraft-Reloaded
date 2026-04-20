@@ -2,14 +2,12 @@ package com.agricraft.agricraft.common.item.crafting;
 
 import com.agricraft.agricraft.common.registry.ModItems;
 import com.agricraft.agricraft.common.registry.ModRecipeSerializers;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.equipment.Equippable;
@@ -22,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MagnifyingHelmetRecipe extends CustomRecipe {
 
-	public MagnifyingHelmetRecipe(CraftingBookCategory category) {
-		super(category);
+	public MagnifyingHelmetRecipe() {
+		super();
 	}
 
 	@Override
@@ -51,7 +49,7 @@ public class MagnifyingHelmetRecipe extends CustomRecipe {
 
 	@NotNull
 	@Override
-	public ItemStack assemble(CraftingInput container, HolderLookup.Provider registries) {
+	public ItemStack assemble(CraftingInput container) {
 		ItemStack helmet = null;
 		ItemStack glass = null;
 		for (int i = 0; i < container.size(); i++) {

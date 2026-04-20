@@ -39,7 +39,7 @@
 		"agricraft-fabric.mixins.json"
 	],
 	"depends": {
-		"minecraft": "1.21.11",
+		"minecraft": "~26.1",
 		"resourcefulconfig": ">=2.1.2"
 	},
 	"accessWidener": "agricraft-fabric.accesswidener"

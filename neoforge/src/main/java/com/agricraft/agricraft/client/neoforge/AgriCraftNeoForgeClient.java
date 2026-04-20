@@ -9,14 +9,11 @@ import com.agricraft.agricraft.client.gui.MagnifyingGlassOverlay;
 import com.agricraft.agricraft.client.gui.SeedAnalyzerScreen;
 import com.agricraft.agricraft.common.config.neoforge.NeoForgeMenuConfig;
 import com.agricraft.agricraft.common.registry.ModBlockEntityTypes;
-import com.agricraft.agricraft.common.registry.ModBlocks;
 import com.agricraft.agricraft.common.registry.ModMenus;
 import com.agricraft.agricraft.common.util.PlatformClient;
 import com.agricraft.agricraft.common.util.neoforge.NeoForgePlatformClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
@@ -52,7 +49,6 @@ public class AgriCraftNeoForgeClient {
 	public static void onClientSetup(FMLClientSetupEvent event) {
 		PlatformClient.setup(new NeoForgePlatformClient());
 		AgriCraftNeoForgeClient.init();
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.SEED_ANALYZER.get(), ChunkSectionLayer.CUTOUT);
 	}
 
 	private static StandaloneModelKey<BlockStateModel> registerModel(ModelEvent.RegisterStandalone event, Identifier id) {

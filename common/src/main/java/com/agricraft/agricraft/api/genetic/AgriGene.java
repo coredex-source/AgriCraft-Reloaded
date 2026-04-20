@@ -58,7 +58,7 @@ public interface AgriGene<T> extends AgriRegistrable {
 	/**
 	 * Add components to the item tooltip
 	 *
-	 * @param tooltipComponents the list to add the components to
+	 * @param tooltipAdder the consumer to add the components to
 	 * @param trait             the value of the gene
 	 */
 	void addTooltip(Consumer<Component> tooltipAdder, T trait);

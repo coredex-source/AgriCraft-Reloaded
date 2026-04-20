@@ -11,8 +11,10 @@ dependencies {
 	api "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-26.1:$resourcefulconfig_version"
 	api "com.terraformersmc:modmenu:$modmenu_version"
 
-//	modCompileOnly "mezz.jei:jei-$minecraft_version-fabric-api:$jei_version"
+	compileOnly "mezz.jei:jei-$minecraft_version-fabric-api:$jei_version"
 //	modRuntimeOnly "mezz.jei:jei-$minecraft_version-fabric:$jei_version"
+
+	compileOnly "mcp.mobius.waila:wthit-api:fabric-$wthit_version"
 
 	implementation "curse.maven:jade-324717:$jade_fabric_version"
 }
@@ -45,6 +47,14 @@ sourceSets {
 			exclude '.cache'
 		}
 	}
+}
+
+tasks.processResources {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Jar).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // Implement mcgradleconventions loader attribute

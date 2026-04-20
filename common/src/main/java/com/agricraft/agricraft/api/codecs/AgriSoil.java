@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +44,7 @@ public record AgriSoil(List<String> mods, List<AgriSoilVariant> variants,
 				if (variant.states().isEmpty()) {
 					return true;
 				}
-				Set<String> list = blockState.getValues().entrySet().stream().map(StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.toSet());
+				Set<String> list = blockState.getValues().map(v -> v.property().getName() + "=" + v.valueName()).collect(Collectors.toSet());
 				if (list.containsAll(variant.states())) {
 					return true;
 				}

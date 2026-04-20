@@ -50,7 +50,7 @@ public class TrowelItem extends Item implements AgriGenomeProviderItem {
 	protected InteractionResult tryUseOnCrop(AgriCrop crop, ItemStack heldItem, Player player) {
 		if (crop.hasWeeds()) {
 			if (player != null && player.level().isClientSide()) {
-				player.displayClientMessage(Component.translatable("agricraft.message.trowel_weed"), false);
+				player.sendSystemMessage(Component.translatable("agricraft.message.trowel_weed"));
 			}
 			return InteractionResult.FAIL;
 		} else if (crop.isCrossCropSticks()) {
@@ -70,7 +70,7 @@ public class TrowelItem extends Item implements AgriGenomeProviderItem {
 		}
 		if (this.hasPlant(stack)) {
 			if (player != null) {
-				player.displayClientMessage(Component.translatable("agricraft.message.trowel_plant"), false);
+				player.sendSystemMessage(Component.translatable("agricraft.message.trowel_plant"));
 			}
 			return InteractionResult.FAIL;
 		} else {
@@ -102,7 +102,7 @@ public class TrowelItem extends Item implements AgriGenomeProviderItem {
 			return InteractionResult.SUCCESS;
 		} else {
 			if (player != null) {
-				player.displayClientMessage(Component.translatable("agricraft.message.trowel_no_plant"), false);
+				player.sendSystemMessage(Component.translatable("agricraft.message.trowel_no_plant"));
 			}
 			return InteractionResult.FAIL;
 		}

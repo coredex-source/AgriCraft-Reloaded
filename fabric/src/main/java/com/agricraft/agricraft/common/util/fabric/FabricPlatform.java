@@ -11,9 +11,9 @@ import com.agricraft.agricraft.common.util.Platform;
 import com.agricraft.agricraft.common.util.PlatformRegistry;
 import com.agricraft.agricraft.fabric.AgriCraftFabric;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -72,7 +72,7 @@ public class FabricPlatform extends Platform {
 
 	@Override
 	public CreativeModeTab createMainCreativeTab() {
-		return FabricItemGroup.builder()
+		return FabricCreativeModeTab.builder()
 				.icon(() -> new ItemStack(ModItems.DEBUGGER.get()))
 				.title(Component.translatable("itemGroup.agricraft.main"))
 				.displayItems(ModItems::addItemsToTabs)
@@ -81,7 +81,7 @@ public class FabricPlatform extends Platform {
 
 	@Override
 	public CreativeModeTab createSeedsCreativeTab() {
-		return FabricItemGroup.builder()
+		return FabricCreativeModeTab.builder()
 				.title(Component.translatable("itemGroup.agricraft.seeds"))
 				.icon(() -> new ItemStack(Items.WHEAT_SEEDS))
 				.displayItems((itemDisplayParameters, output) -> AgriApi.getPlantRegistry()
@@ -143,7 +143,7 @@ public class FabricPlatform extends Platform {
 
 	@Override
 	public <T extends AbstractContainerMenu> MenuType<T> createMenuType(Platform.MenuFactory<T> factory) {
-		return new ExtendedScreenHandlerType<>((syncId, inventory, pos) -> {
+		return new ExtendedMenuType<>((syncId, inventory, pos) -> {
 			FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
 			buf.writeBlockPos(pos);
 			return factory.create(syncId, inventory, buf);
@@ -152,7 +152,7 @@ public class FabricPlatform extends Platform {
 
 	@Override
 	public void openMenu(ServerPlayer player, ExtraDataMenuProvider provider) {
-		player.openMenu(new ExtendedScreenHandlerFactory<BlockPos>() {
+		player.openMenu(new ExtendedMenuProvider<BlockPos>() {
 			@Override
 			public BlockPos getScreenOpeningData(ServerPlayer player) {
 				FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());

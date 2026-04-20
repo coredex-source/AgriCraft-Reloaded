@@ -6,7 +6,7 @@ import com.agricraft.agricraft.api.tools.magnifying.MagnifyingInspectable;
 import com.agricraft.agricraft.api.tools.magnifying.MagnifyingInspector;
 import com.agricraft.agricraft.common.registry.ModItems;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -66,7 +66,7 @@ public class MagnifyingGlassOverlay {
 			Vec3 lookAngle = player.getLookAngle();
 			if (-0.1 <= lookAngle.z && lookAngle.z <= 0.1) {
 				HitResult pick = Minecraft.getInstance().getCameraEntity().pick(100, 0, false);
-				double sunOrientation = (level.getDayTime() % 24000L) / 24000.0;  // angle in circle in [0,1]
+				double sunOrientation = (level.getOverworldClockTime() % 24000L) / 24000.0;  // angle in circle in [0,1]
 				double playerOrientation = Math.atan2(lookAngle.x, lookAngle.y) / Math.PI / 2.0;  // angle in a circle in [0,1]
 				// modify the orientation of the player to be in the same system as the sun's
 				if (-0.5 < playerOrientation && playerOrientation < 0) {
@@ -103,7 +103,7 @@ public class MagnifyingGlassOverlay {
 	}
 
 
-	public static void renderOverlay(GuiGraphics graphics, float partialTicks) {
+	public static void renderOverlay(GuiGraphicsExtractor graphics, float partialTicks) {
 		// greatly inspired from create goggles
 		Minecraft mc = Minecraft.getInstance();
 		if ((mc.screen != null && !(mc.screen instanceof ChatScreen)) || mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR || mc.player == null || mc.level == null) {
@@ -148,7 +148,7 @@ public class MagnifyingGlassOverlay {
 				tooltipHeight += 2; // gap between title lines and next lines
 				tooltipHeight += (tooltip.size() - 1) * 10;
 			}
-			graphics.renderTooltip(mc.font, clientTooltip, posX, posY - tooltipHeight / 2 + 12, DefaultTooltipPositioner.INSTANCE, null);
+			graphics.tooltip(mc.font, clientTooltip, posX, posY - tooltipHeight / 2 + 12, DefaultTooltipPositioner.INSTANCE, null);
 		}
 
 	}

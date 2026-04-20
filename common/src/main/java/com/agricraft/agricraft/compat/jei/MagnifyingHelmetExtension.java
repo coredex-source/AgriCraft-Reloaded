@@ -11,6 +11,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class MagnifyingHelmetExtension implements ICraftingCategoryExtension<Mag
 	@Override
 	public List<SlotDisplay> getIngredients(RecipeHolder<MagnifyingHelmetRecipe> recipeHolder) {
 		List<SlotDisplay> helmetsInput = HELMETS.stream()
-				.map(ItemStack::copy)
+				.map(stack -> new ItemStackTemplate(stack.getItem()))
 				.map(SlotDisplay.ItemStackSlotDisplay::new)
 				.map(display -> (SlotDisplay) display)
 				.toList();
 		return List.of(
 				new SlotDisplay.Composite(helmetsInput),
-				new SlotDisplay.ItemStackSlotDisplay(ModItems.MAGNIFYING_GLASS.get().getDefaultInstance())
+				new SlotDisplay.ItemStackSlotDisplay(new ItemStackTemplate(ModItems.MAGNIFYING_GLASS.get()))
 		);
 	}
 

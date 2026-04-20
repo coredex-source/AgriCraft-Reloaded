@@ -8,10 +8,10 @@ import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.subtypes.UidContext;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.TooltipFlag;
@@ -58,14 +58,14 @@ public class PlantIngredient {
 
 	public static final IIngredientRenderer<AgriPlant> RENDERER = new IIngredientRenderer<>() {
 		@Override
-		public void render(GuiGraphics guiGraphics, AgriPlant plant) {
+		public void render(GuiGraphicsExtractor guiGraphics, AgriPlant plant) {
 			Optional<Identifier> optional = AgriApi.getPlantId(plant);
 			if (optional.isPresent()) {
 				Identifier plantId = optional.get();
 				// get the model for the last growth stage and use the particle texture (that is also the crop texture) to render in jei
 				BlockStateModel model = AgriClientApi.getPlantModel(plantId.toString(), plant.getInitialGrowthStage().total() - 1);
 
-				TextureAtlasSprite sprite = model.particleIcon();
+				TextureAtlasSprite sprite = model.particleMaterial().sprite();
 				guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, 0, 0, 16, 16);
 			}
 		}

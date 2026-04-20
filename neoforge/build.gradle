@@ -43,6 +43,14 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+tasks.processResources {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Jar).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 sourceSets.main.java {
 	// Exclude third-party mod compat plugins that don't have NeoForge builds yet
 	exclude '**/plugin/industrialforegoing/**'
@@ -55,6 +63,8 @@ dependencies {
 
 	compileOnly "mezz.jei:jei-$minecraft_version-neoforge-api:$jei_version"
 	runtimeOnly("mezz.jei:jei-$minecraft_version-neoforge:$jei_version") { transitive = false }
+
+	compileOnly "mcp.mobius.waila:wthit-api:fabric-$wthit_version"
 
 	implementation "curse.maven:jade-324717:$jade_forge_version"
 }

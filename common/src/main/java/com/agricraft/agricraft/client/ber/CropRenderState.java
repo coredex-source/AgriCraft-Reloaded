@@ -1,6 +1,6 @@
 package com.agricraft.agricraft.client.ber;
 
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 
 public class CropRenderState extends BlockEntityRenderState {

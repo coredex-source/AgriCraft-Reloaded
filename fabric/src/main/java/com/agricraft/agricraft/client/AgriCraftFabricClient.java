@@ -8,24 +8,21 @@ import com.agricraft.agricraft.client.gui.MagnifyingGlassOverlay;
 import com.agricraft.agricraft.client.gui.SeedAnalyzerScreen;
 import com.agricraft.agricraft.fabric.mixin.SpecialModelRenderersAccessor;
 import com.agricraft.agricraft.common.registry.ModBlockEntityTypes;
-import com.agricraft.agricraft.common.registry.ModBlocks;
 import com.agricraft.agricraft.common.registry.ModMenus;
 import com.agricraft.agricraft.common.util.LangUtils;
 import com.agricraft.agricraft.common.util.PlatformClient;
 import com.agricraft.agricraft.common.util.fabric.FabricPlatformClient;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.FileToIdConverter;
@@ -82,8 +79,8 @@ public class AgriCraftFabricClient implements ClientModInitializer {
 		BlockEntityRenderers.register(ModBlockEntityTypes.SEED_ANALYZER.get(), SeedAnalyzerEntityRenderer::new);
 		MenuScreens.register(ModMenus.SEED_ANALYZER_MENU.get(), SeedAnalyzerScreen::new);
 
-		HudRenderCallback.EVENT.register((guiGraphics, deltaTracker) -> {
-			MagnifyingGlassOverlay.renderOverlay(guiGraphics, deltaTracker.getGameTimeDeltaPartialTick(false));
+		HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "magnifying_glass_overlay"), (guiGraphicsExtractor, deltaTracker) -> {
+			MagnifyingGlassOverlay.renderOverlay(guiGraphicsExtractor, deltaTracker.getGameTimeDeltaPartialTick(false));
 		});
 		ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipType, lines) -> {
 			if (stack.has(DataComponents.CUSTOM_DATA) && stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getBooleanOr("magnifying", false)) {
@@ -105,7 +102,6 @@ public class AgriCraftFabricClient implements ClientModInitializer {
 					}
 			));
 		});
-		BlockRenderLayerMap.putBlock(ModBlocks.SEED_ANALYZER.get(), ChunkSectionLayer.CUTOUT);
 	}
 
 }

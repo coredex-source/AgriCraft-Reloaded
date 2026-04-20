@@ -6,7 +6,7 @@ import com.agricraft.agricraft.api.tools.magnifying.MagnifyingInspector;
 import com.agricraft.agricraft.client.gui.MagnifyingGlassOverlay;
 import com.agricraft.agricraft.common.util.PlatformClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
@@ -87,7 +87,7 @@ public final class AgriClientApi {
 		BlockStateModel model = PlatformClient.get().getStandaloneModel(Identifier.parse(plantId));
 		if (model == null) {
 			// model not found, defaults to the missing model
-			model = Minecraft.getInstance().getModelManager().getMissingBlockStateModel();
+			model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().missingModel();
 		}
 		return model;
 	}

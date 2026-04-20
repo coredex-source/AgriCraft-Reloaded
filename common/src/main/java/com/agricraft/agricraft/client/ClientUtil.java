@@ -7,7 +7,7 @@ import com.agricraft.agricraft.common.util.PlatformClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -43,7 +43,7 @@ public class ClientUtil {
 		if (model == null) {
 			return;
 		}
-		TextureAtlasSprite particleIcon = model.particleIcon();
+		TextureAtlasSprite particleIcon = model.particleMaterial().sprite();
 		if (particleIcon == null) {
 			return;
 		}

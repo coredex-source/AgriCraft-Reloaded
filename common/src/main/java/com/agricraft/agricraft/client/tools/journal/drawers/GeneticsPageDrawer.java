@@ -10,7 +10,7 @@ import com.agricraft.agricraft.common.util.LangUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -34,14 +34,14 @@ public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 	private final Component PARAGRAPH_MUTATIVITY = Component.translatable("agricraft.journal.stats.mutativity");
 
 	@Override
-	public void drawLeftSheet(GuiGraphics guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawLeftSheet(GuiGraphicsExtractor guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 		float scale = 0.7F;
 		float dx = pageX + 6;
 		float dy = pageY + 7 + 10;
 		int spacing = 4;
 		// Title
-		guiGraphics.drawString(font, CROP_BREEDING, (int) dx, (int) dy, 0xFF000000, false);
+		guiGraphics.text(font, CROP_BREEDING, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 		// First paragraph
@@ -58,14 +58,14 @@ public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 	}
 
 	@Override
-	public void drawRightSheet(GuiGraphics guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawRightSheet(GuiGraphicsExtractor guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 
 		float dx = pageX + 6;
 		float dy = pageY + 10;
 		float spacing = 4;
 		// Title
-		guiGraphics.drawString(font, STATS, (int) dx, (int) dy, 0xFF000000, false);
+		guiGraphics.text(font, STATS, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 

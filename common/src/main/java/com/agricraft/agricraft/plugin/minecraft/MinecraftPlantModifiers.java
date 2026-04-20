@@ -25,7 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.FungusBlock;
+import net.minecraft.world.level.block.NetherFungusBlock;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -45,7 +45,7 @@ public class MinecraftPlantModifiers {
 		AgriPlantModifierFactoryRegistry.register(ExperiencePlantModifier.ID, info -> Optional.of(new ExperiencePlantModifier()));
 		AgriPlantModifierFactoryRegistry.register(FungusPlantModifier.ID, info -> {
 			Block block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(info.value()));
-			if (block instanceof FungusBlock fungus) {
+			if (block instanceof NetherFungusBlock fungus) {
 				return Optional.of(new FungusPlantModifier(fungus));
 			}
 			return Optional.empty();
@@ -123,9 +123,9 @@ public class MinecraftPlantModifiers {
 	public static class FungusPlantModifier implements IAgriPlantModifier {
 
 		public static final String ID = "agricraft:fungus";
-		private final FungusBlock fungus;
+		private final NetherFungusBlock fungus;
 
-		public FungusPlantModifier(FungusBlock fungus) {
+		public FungusPlantModifier(NetherFungusBlock fungus) {
 			this.fungus = fungus;
 		}
 
@@ -139,8 +139,8 @@ public class MinecraftPlantModifiers {
 					|| !fungus.isValidBonemealTarget(level, crop.getBlockPos(), crop.getBlockState())) {
 				return Optional.empty();
 			}
-			if (fungus.isBonemealSuccess(level, level.random, crop.getBlockPos(), crop.getBlockState())) {
-				fungus.performBonemeal(((ServerLevel) level), level.random, crop.getBlockPos(), crop.getBlockState());
+			if (fungus.isBonemealSuccess(level, level.getRandom(), crop.getBlockPos(), crop.getBlockState())) {
+				fungus.performBonemeal(((ServerLevel) level), level.getRandom(), crop.getBlockPos(), crop.getBlockState());
 				level.levelEvent(2005, crop.getBlockPos(), 0);
 			}
 			stack.shrink(1);
@@ -230,7 +230,7 @@ public class MinecraftPlantModifiers {
 					|| !sapling.isValidBonemealTarget(level, crop.getBlockPos(), crop.getBlockState())) {
 				return Optional.empty();
 			}
-			if (sapling.isBonemealSuccess(level, level.random, crop.getBlockPos(), crop.getBlockState())) {
+			if (sapling.isBonemealSuccess(level, level.getRandom(), crop.getBlockPos(), crop.getBlockState())) {
 				BlockState state = ((Block) sapling).defaultBlockState();
 				if (state.hasProperty(SaplingBlock.STAGE)) { // for trees
 					state = state.setValue(SaplingBlock.STAGE, 1);

@@ -7,7 +7,7 @@ import com.agricraft.agricraft.common.item.journal.IntroductionPage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.IdMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,7 +27,7 @@ public class IntroductionPageDrawer implements JournalPageDrawer<IntroductionPag
 	private static final MutableComponent DISCOVERED = Component.translatable("agricraft.journal.introduction.discovered");
 
 	@Override
-	public void drawLeftSheet(GuiGraphics guiGraphics, IntroductionPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawLeftSheet(GuiGraphicsExtractor guiGraphics, IntroductionPage page, int pageX, int pageY, JournalData journalData) {
 		// alpha/beta notice
 		// this will be removed when the mod is out of alpha/beta
 		float dy = pageY + 15;
@@ -46,13 +46,13 @@ public class IntroductionPageDrawer implements JournalPageDrawer<IntroductionPag
 	}
 
 	@Override
-	public void drawRightSheet(GuiGraphics guiGraphics, IntroductionPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawRightSheet(GuiGraphicsExtractor guiGraphics, IntroductionPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 		float dy = pageY + 10;
 		float dx = pageX + 6;
 		float spacing = 4;
 		// Title
-		guiGraphics.drawString(font, INTRODUCTION, (int) dx, (int) dy, 0xFF000000, false);
+		guiGraphics.text(font, INTRODUCTION, (int) dx, (int) dy, 0xFF000000, false);
 		dy += font.lineHeight;
 		dy += spacing;
 		// First paragraph

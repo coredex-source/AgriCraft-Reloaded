@@ -307,11 +307,11 @@ public class CropBlock extends Block implements EntityBlock, BonemealableBlock, 
 		if (AgriApi.getFertilizerAdapter(heldItem).isPresent()) {
 			return AgriApi.getFertilizerAdapter(heldItem).get().valueOf(heldItem).map(fertilizer -> {
 				if (crop.acceptsFertilizer(fertilizer)) {
-					InteractionResult result = fertilizer.applyFertilizer(level, pos, crop, heldItem, level.random, player);
+					InteractionResult result = fertilizer.applyFertilizer(level, pos, crop, heldItem, level.getRandom(), player);
 					if (result == InteractionResult.CONSUME || result == InteractionResult.SUCCESS) {
-						crop.onApplyFertilizer(fertilizer, level.random);
+						crop.onApplyFertilizer(fertilizer, level.getRandom());
 						if (crop.hasPlant()) {
-							crop.getPlant().onFertilized(crop, heldItem, level.random);
+							crop.getPlant().onFertilized(crop, heldItem, level.getRandom());
 						}
 					}
 					return result;
