@@ -1,50 +1,41 @@
-architectury {
-	platformSetupLoomIde()
-	fabric()
-}
-
-base {
-	archivesName = "${mod_name}-${project.name}-${minecraft_version}"
-}
-
-loom {
-	accessWidenerPath = file("src/main/resources/agricraft-fabric.accesswidener")
-	mixin {
-		useLegacyMixinAp = true
-		defaultRefmapName = "agricraft-fabric-refmap.json"
-	}
-}
-
-configurations {
-	common
-	shadowCommon
-	compileClasspath.extendsFrom common
-	runtimeClasspath.extendsFrom common
-	developmentFabric.extendsFrom common
+plugins {
+	id 'multiloader-loader'
+	id 'net.fabricmc.fabric-loom'
 }
 
 dependencies {
-	modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
-	modApi "net.fabricmc.fabric-api:fabric-api:$fabric_version"
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+	api "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-	common(project(path: ":common", configuration: "namedElements")) { transitive false }
-	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
-
-	modApi "com.terraformersmc:modmenu:$modmenu_version"
+	api "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-26.1:$resourcefulconfig_version"
+	api "com.terraformersmc:modmenu:$modmenu_version"
 
 //	modCompileOnly "mezz.jei:jei-$minecraft_version-fabric-api:$jei_version"
 //	modRuntimeOnly "mezz.jei:jei-$minecraft_version-fabric:$jei_version"
 
-//	modLocalRuntime "cc.cassian.rrv:reliable-recipe-viewer-fabric:${rrv_version}+${minecraft_version}"
+	implementation "curse.maven:jade-324717:$jade_fabric_version"
+}
 
-	//modRuntimeOnly "curse.maven:jade-324717:4978962"  // Jade-1.20.4-fabric-13.2.1
-	//modCompileOnly "curse.maven:jade-324717:4980187"  // Jade-1.20.4-fabric-13.2.1-api
-	modImplementation "curse.maven:jade-324717:$jade_fabric_version"
-
-	//	modRuntimeOnly "curse.maven:fabric-seasons-413523:4699698"  // Fabric Seasons 2.3
-	//	modCompileOnly "curse.maven:fabric-seasons-413523:4699698"  // Fabric Seasons 2.3
-
-	annotationProcessor(implementation(include("io.github.llamalad7:mixinextras-fabric:0.5.0-beta.2")))
+loom {
+	def aw = file("src/main/resources/agricraft-fabric.accesswidener")
+	if (aw.exists()) {
+		accessWidenerPath.set(aw)
+	}
+	runs {
+		client {
+			client()
+			setConfigName('Fabric Client')
+			ideConfigGenerated(true)
+			runDir('runs/client')
+		}
+		server {
+			server()
+			setConfigName('Fabric Server')
+			ideConfigGenerated(true)
+			runDir('runs/server')
+		}
+	}
 }
 
 sourceSets {
@@ -56,27 +47,21 @@ sourceSets {
 	}
 }
 
-shadowJar {
-	configurations = [project.configurations.shadowCommon]
-	archiveClassifier.set "dev-shadow"
-}
-
-remapJar {
-	input.set shadowJar.archiveFile
-	dependsOn shadowJar
-	archiveClassifier.set null
-}
-
-sourcesJar {
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	def commonSources = project(":common").sourcesJar
-	dependsOn commonSources
-	from commonSources.archiveFile.map { zipTree(it) }
-}
-
-components.java {
-	withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-		skip()
+// Implement mcgradleconventions loader attribute
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
+	configurations.named("$variant") {
+		attributes {
+			attribute(loaderAttribute, 'fabric')
+		}
 	}
 }
-
+sourceSets.configureEach {
+	[it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant ->
+		configurations.named("$variant") {
+			attributes {
+				attribute(loaderAttribute, 'fabric')
+			}
+		}
+	}
+}
