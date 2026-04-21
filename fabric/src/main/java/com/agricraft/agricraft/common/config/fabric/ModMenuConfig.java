@@ -1,6 +1,5 @@
 package com.agricraft.agricraft.common.config.fabric;
 
-import com.agricraft.agricraft.AgriCraft;
 import com.agricraft.agricraft.api.config.AgriCraftConfig;
 import com.agricraft.agricraft.api.config.CompatConfig;
 import com.agricraft.agricraft.api.config.CoreConfig;
@@ -9,6 +8,7 @@ import dev.eclipseui.EclipseUI;
 import dev.eclipseui.api.Theme;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -20,13 +20,13 @@ public class ModMenuConfig implements ModMenuApi {
 	}
 
 	private static Screen createConfigScreen(Screen parent) {
-		AgriCraft.CONFIGURATOR.loadConfig(AgriCraftConfig.class);
+		AgriCraftConfig.load(FabricLoader.getInstance().getConfigDir());
 
 		return EclipseUI.configScreen()
 				.title(Component.translatable("config.agricraft.title"))
 				.parent(parent)
 				.theme(Theme.MODERN)
-				.onSave(() -> AgriCraft.CONFIGURATOR.saveConfig(AgriCraftConfig.class))
+				.onSave(() -> AgriCraftConfig.save(FabricLoader.getInstance().getConfigDir()))
 				.category(cat -> cat
 						.name(Component.translatable("config.agricraft.core"))
 						.toggle(t -> t.name(Component.translatable("config.agricraft.core.register_packs_by_default")).binding(() -> CoreConfig.enablePacksByDefault, v -> CoreConfig.enablePacksByDefault = v).defaultValue(true))

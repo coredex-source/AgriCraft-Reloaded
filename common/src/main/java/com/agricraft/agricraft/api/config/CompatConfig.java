@@ -1,27 +1,14 @@
 package com.agricraft.agricraft.api.config;
 
-import com.teamresourceful.resourcefulconfig.api.annotations.Category;
-import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
-
 /**
- * Agricraft mode compatibility configuration category.
+ * AgriCraft compatibility configuration values.
  */
-@Category("compat")
 public final class CompatConfig {
 
-	@ConfigEntry(id = "mysticalagriculture", translation = "config.agricraft.compat.mysticalagriculture")
-	@Comment("Set to false to disable compatibility with Mystical Agriculture (in case things break)")
+	private CompatConfig() {
+	}
+
 	public static boolean enableMysticalAgriculture = true;
-
-	@ConfigEntry(id = "pneumaticcraft", translation = "config.agricraft.compat.pneumaticcraft")
-	@Comment("If true, harvesting drones will be able to harvest AgriCraft crops")
 	public static boolean enablePneumaticCraft = true;
-
-	@ConfigEntry(id = "industrialforegoing", translation = "config.agricraft.compat.industrialforegoing")
-	@Comment("If set to true, plant gatherer will be able to harvest AgriCraft crops")
 	public static boolean enableIndustrialForegoing = true;
-
-
 }

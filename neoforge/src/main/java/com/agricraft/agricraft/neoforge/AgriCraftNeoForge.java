@@ -4,6 +4,7 @@ import com.agricraft.agricraft.AgriCraft;
 import com.agricraft.agricraft.api.AgriApi;
 import com.agricraft.agricraft.api.codecs.AgriMutation;
 import com.agricraft.agricraft.api.codecs.AgriSoil;
+import com.agricraft.agricraft.api.config.AgriCraftConfig;
 import com.agricraft.agricraft.api.config.CoreConfig;
 import com.agricraft.agricraft.api.fertilizer.AgriFertilizer;
 import com.agricraft.agricraft.api.plant.AgriPlant;
@@ -29,6 +30,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -45,6 +47,7 @@ public class AgriCraftNeoForge {
 	public AgriCraftNeoForge(IEventBus bus) {
 		NeoForgeRegistry.setModBus(bus);
 		Platform.setup(new NeoForgePlatform());
+		AgriCraftConfig.load(FMLPaths.CONFIGDIR.get());
 		AgriCraft.init();
 		bus.addListener(AgriCraftNeoForge::onCommonSetup);
 		bus.addListener(AgriCraftNeoForge::onRegisterDatapackRegistry);

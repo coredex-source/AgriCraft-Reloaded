@@ -19,7 +19,6 @@ dependencies {
 	annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.5.0-beta.2'
 
 	compileOnly "maven.modrinth:eclipseui:$eclipseui_version"
-	compileOnly "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-26.1:$resourcefulconfig_version"
 
 	compileOnly "mezz.jei:jei-$minecraft_version-common-api:$jei_version"
 

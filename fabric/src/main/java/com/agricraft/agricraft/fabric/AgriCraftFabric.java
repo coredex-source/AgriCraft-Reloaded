@@ -4,6 +4,7 @@ import com.agricraft.agricraft.AgriCraft;
 import com.agricraft.agricraft.api.AgriApi;
 import com.agricraft.agricraft.api.codecs.AgriMutation;
 import com.agricraft.agricraft.api.codecs.AgriSoil;
+import com.agricraft.agricraft.api.config.AgriCraftConfig;
 import com.agricraft.agricraft.api.config.CoreConfig;
 import com.agricraft.agricraft.api.fertilizer.AgriFertilizer;
 import com.agricraft.agricraft.api.plant.AgriPlant;
@@ -35,6 +36,7 @@ public class AgriCraftFabric implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		Platform.setup(new FabricPlatform());
+		AgriCraftConfig.load(FabricLoader.getInstance().getConfigDir());
 		AgriCraft.init();
 		DynamicRegistries.registerSynced(AgriApi.AGRIPLANTS, AgriPlant.CODEC, AgriPlant.CODEC);
 		DynamicRegistries.registerSynced(AgriApi.AGRIWEEDS, AgriWeed.CODEC, AgriWeed.CODEC);

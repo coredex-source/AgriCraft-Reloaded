@@ -1,6 +1,5 @@
 package com.agricraft.agricraft.common.config.neoforge;
 
-import com.agricraft.agricraft.AgriCraft;
 import com.agricraft.agricraft.api.config.AgriCraftConfig;
 import com.agricraft.agricraft.api.config.CompatConfig;
 import com.agricraft.agricraft.api.config.CoreConfig;
@@ -10,6 +9,7 @@ import dev.eclipseui.api.Theme;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 public class NeoForgeMenuConfig {
@@ -22,13 +22,13 @@ public class NeoForgeMenuConfig {
 	}
 
 	private static Screen createConfigScreen(Screen parent) {
-		AgriCraft.CONFIGURATOR.loadConfig(AgriCraftConfig.class);
+		AgriCraftConfig.load(FMLPaths.CONFIGDIR.get());
 
 		return EclipseUI.configScreen()
 				.title(Component.translatable("config.agricraft.title"))
 				.parent(parent)
 				.theme(Theme.MODERN)
-				.onSave(() -> AgriCraft.CONFIGURATOR.saveConfig(AgriCraftConfig.class))
+				.onSave(() -> AgriCraftConfig.save(FMLPaths.CONFIGDIR.get()))
 				.category(cat -> cat
 						.name(Component.translatable("config.agricraft.core"))
 						.toggle(t -> t.name(Component.translatable("config.agricraft.core.register_packs_by_default")).binding(() -> CoreConfig.enablePacksByDefault, v -> CoreConfig.enablePacksByDefault = v).defaultValue(true))
