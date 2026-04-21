@@ -1,0 +1,12 @@
+{
+	"required": false,
+	"minVersion": "0.8",
+	"package": "com.agricraft.agricraft.neoforge.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"SodiumSectionRenderingContextCompatMixin"
+	],
+	"injectors": {
+		"defaultRequire": 0
+	}
+}

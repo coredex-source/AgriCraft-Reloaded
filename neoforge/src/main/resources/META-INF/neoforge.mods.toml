@@ -38,3 +38,7 @@ side = "BOTH"
 
 [[mixins]]
 config = "agricraft-common.mixins.json"
+
+[[mixins]]
+config = "agricraft-neoforge.mixins.json"
+requiredMods = ["sodium"]
