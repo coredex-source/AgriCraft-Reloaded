@@ -6,7 +6,8 @@
 	"mixins": [
 		"BlockStateBaseMixin",
 		"FarmBlockMixin",
-		"ItemEntityMixin"
+		"ItemEntityMixin",
+		"OptionWidgetMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

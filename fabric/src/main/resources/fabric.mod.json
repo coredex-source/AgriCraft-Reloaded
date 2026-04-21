@@ -40,7 +40,7 @@
 	],
 	"depends": {
 		"minecraft": "~26.1",
-		"resourcefulconfig": ">=2.1.2"
+		"eclipseui": ">=${eclipseui_version}"
 	},
 	"accessWidener": "agricraft-fabric.accesswidener"
 }

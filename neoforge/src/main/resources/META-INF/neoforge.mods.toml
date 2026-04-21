@@ -30,9 +30,9 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.agricraft]]
-modId = "resourcefulconfig"
+modId = "eclipseui"
 type="required"
-versionRange = "[${resourcefulconfig_version},)"
+versionRange = "[${eclipseui_version},)"
 ordering = "NONE"
 side = "BOTH"
 

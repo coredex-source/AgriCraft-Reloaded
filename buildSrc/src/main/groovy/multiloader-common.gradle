@@ -105,7 +105,7 @@ processResources {
             'neoforge_loader_version_range': neoforge_loader_version_range,
             'credits'                      : credits,
             'java_version'                 : java_version,
-            'resourcefulconfig_version'    : resourcefulconfig_version
+            'eclipseui_version'            : eclipseui_version
     ]
 
     var jsonExpandProps = expandProps.collectEntries {

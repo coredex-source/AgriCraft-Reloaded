@@ -59,7 +59,9 @@ sourceSets.main.java {
 }
 
 dependencies {
-	implementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-26.1:$resourcefulconfig_version"
+	implementation "maven.modrinth:eclipseui:$eclipseui_neoforge_version"
+	compileOnly "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-26.1:$resourcefulconfig_version"
+	runtimeOnly "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-26.1:$resourcefulconfig_version"
 
 	compileOnly "mezz.jei:jei-$minecraft_version-neoforge-api:$jei_version"
 	runtimeOnly("mezz.jei:jei-$minecraft_version-neoforge:$jei_version") { transitive = false }
