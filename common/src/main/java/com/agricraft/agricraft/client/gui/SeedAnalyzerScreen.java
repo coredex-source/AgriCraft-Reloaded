@@ -52,6 +52,7 @@ public class SeedAnalyzerScreen extends AbstractContainerScreen<SeedAnalyzerMenu
 		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI, leftPos + 25, topPos + 70, 186, 73, 18, 18, 256, 256);
 		// magnifying glass
 		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI, leftPos + 13, topPos + 25, 0, 186, 56, 56, 256, 256);
+		super.extractContents(guiGraphics, mouseX, mouseY, partialTick);
 
 		Optional<AgriGenome> optionalGenome = menu.getGenomeToRender();
 		if (optionalGenome.isEmpty()) {

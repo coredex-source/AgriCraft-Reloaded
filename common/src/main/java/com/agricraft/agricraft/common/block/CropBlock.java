@@ -86,7 +86,10 @@ public class CropBlock extends Block implements EntityBlock, BonemealableBlock, 
 	public static final EnumProperty<CropStickVariant> STICK_VARIANT = EnumProperty.create("variant", CropStickVariant.class, CropStickVariant.values());
 	public static final EnumProperty<CropState> CROP_STATE = EnumProperty.create("crop", CropState.class, CropState.values());
 	public static final IntegerProperty LIGHT = IntegerProperty.create("light", 0, 16);
-	private static final ItemStack BONE_MEAL = new ItemStack(Items.BONE_MEAL);
+
+	private static ItemStack createBoneMealStack() {
+		return new ItemStack(Items.BONE_MEAL);
+	}
 
 	public CropBlock(Identifier id) {
 		super(Properties.of()
@@ -423,7 +426,8 @@ public class CropBlock extends Block implements EntityBlock, BonemealableBlock, 
 
 	@Override
 	public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
-		return AgriApi.getFertilizer(BONE_MEAL).flatMap(fertilizer ->
+		ItemStack boneMeal = createBoneMealStack();
+		return AgriApi.getFertilizer(boneMeal).flatMap(fertilizer ->
 				AgriApi.getCrop(level, pos).map(crop -> !crop.isFullyGrown() && crop.acceptsFertilizer(fertilizer))
 		).orElse(false);
 	}
@@ -431,8 +435,9 @@ public class CropBlock extends Block implements EntityBlock, BonemealableBlock, 
 	@Override
 	public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
 		// transfert the right click with a bonemeal to the block entity
-		AgriApi.getFertilizer(BONE_MEAL).ifPresent(fertilizer ->
-				AgriApi.getCrop(level, pos).ifPresent(crop -> fertilizer.applyFertilizer(level, pos, crop, BONE_MEAL, random, null))
+		ItemStack boneMeal = createBoneMealStack();
+		AgriApi.getFertilizer(boneMeal).ifPresent(fertilizer ->
+				AgriApi.getCrop(level, pos).ifPresent(crop -> fertilizer.applyFertilizer(level, pos, crop, boneMeal, random, null))
 		);
 	}
 

@@ -58,7 +58,10 @@ public class CropBlockEntityRenderer implements BlockEntityRenderer<CropBlockEnt
 			AgriGrowthStage stage = blockEntity.getGrowthStage();
 			String plantId = blockEntity.getPlantId();
 			state.plantModel = AgriClientApi.getPlantModel(plantId, stage.index());
-			state.plantColor = Minecraft.getInstance().getBlockColors().getTintSource(blockEntity.getBlockState(), 0).color(blockEntity.getBlockState());
+			var tintSource = Minecraft.getInstance().getBlockColors().getTintSource(blockEntity.getBlockState(), 0);
+			if (tintSource != null) {
+				state.plantColor = tintSource.color(blockEntity.getBlockState());
+			}
 		}
 		if (blockEntity.hasWeeds()) {
 			AgriGrowthStage weedStage = blockEntity.getWeedGrowthStage();
