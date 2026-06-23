@@ -39,7 +39,7 @@
 		"agricraft-fabric.mixins.json"
 	],
 	"depends": {
-		"minecraft": "~26.1",
+		"minecraft": "~26.2",
 		"eclipseui": ">=${eclipseui_version}"
 	},
 	"accessWidener": "agricraft-fabric.accesswidener"

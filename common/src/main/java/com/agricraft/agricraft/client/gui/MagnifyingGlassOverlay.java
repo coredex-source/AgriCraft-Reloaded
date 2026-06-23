@@ -106,7 +106,7 @@ public class MagnifyingGlassOverlay {
 	public static void renderOverlay(GuiGraphicsExtractor graphics, float partialTicks) {
 		// greatly inspired from create goggles
 		Minecraft mc = Minecraft.getInstance();
-		if ((mc.screen != null && !(mc.screen instanceof ChatScreen)) || mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR || mc.player == null || mc.level == null) {
+		if ((mc.gui.screen() != null && !(mc.gui.screen() instanceof ChatScreen)) || mc.gui.hud.isHidden() || mc.gameMode.getPlayerMode() == GameType.SPECTATOR || mc.player == null || mc.level == null) {
 			hoverTicks = 0;
 			return;
 		}

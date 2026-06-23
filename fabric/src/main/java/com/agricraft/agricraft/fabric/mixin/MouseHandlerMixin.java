@@ -42,7 +42,7 @@ public class MouseHandlerMixin {
 		net.minecraft.nbt.CompoundTag tag = player.getItemInHand(InteractionHand.MAIN_HAND).getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY).copyTag();
 		int s = tag.getIntOr("sorter", 0);
 		String id = SeedBagItem.SORTERS.get(s).getId().toString().replace(":", ".");
-		Minecraft.getInstance().gui.setOverlayMessage(Component.translatable("agricraft.tooltip.bag.sorter")
+		Minecraft.getInstance().gui.hud.setOverlayMessage(Component.translatable("agricraft.tooltip.bag.sorter")
 				.append(Component.translatable("agricraft.tooltip.bag.sorter." + id)), false);
 	}
 }

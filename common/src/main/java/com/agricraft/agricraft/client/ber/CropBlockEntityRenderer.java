@@ -76,21 +76,21 @@ public class CropBlockEntityRenderer implements BlockEntityRenderer<CropBlockEnt
 		if (state.sticksModel != null) {
 			List<BlockStateModelPart> parts = new ArrayList<>();
 			state.sticksModel.collectParts(random, parts);
-			collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), parts, new int[]{-1}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+			collector.submitBlockModel(poseStack, Sheets.cutoutBlockItemSheet(), parts, new int[]{-1}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 		}
 		if (state.plantModel != null) {
 			List<BlockStateModelPart> parts = new ArrayList<>();
 			state.plantModel.collectParts(random, parts);
 			if (state.plantColor == -1) {
-				collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), parts, new int[]{-1}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+				collector.submitBlockModel(poseStack, Sheets.cutoutBlockItemSheet(), parts, new int[]{-1}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 			} else {
-				collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), parts, new int[]{0xFF000000 | state.plantColor}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+				collector.submitBlockModel(poseStack, Sheets.cutoutBlockItemSheet(), parts, new int[]{0xFF000000 | state.plantColor}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 			}
 		}
 		if (state.weedModel != null) {
 			List<BlockStateModelPart> parts = new ArrayList<>();
 			state.weedModel.collectParts(random, parts);
-			collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), parts, new int[]{-1}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+			collector.submitBlockModel(poseStack, Sheets.cutoutBlockItemSheet(), parts, new int[]{-1}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 		}
 	}
 

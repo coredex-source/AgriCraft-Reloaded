@@ -41,7 +41,7 @@ public class AgriSeedBEWLR implements SpecialModelRenderer<String> {
 		BlockStateModel seedModel = AgriClientApi.getSeedModel(species);
 		List<BlockStateModelPart> parts = new ArrayList<>();
 		seedModel.collectParts(RandomSource.create(seed), parts);
-		collector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), parts, new int[]{-1}, packedLight, packedOverlay, 0);
+		collector.submitBlockModel(poseStack, Sheets.cutoutBlockItemSheet(), parts, new int[]{-1}, packedLight, packedOverlay, 0);
 	}
 
 	@Override

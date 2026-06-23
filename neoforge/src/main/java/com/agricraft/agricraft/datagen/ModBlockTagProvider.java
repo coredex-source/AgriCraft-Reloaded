@@ -4,7 +4,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
@@ -25,44 +27,44 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/aluminum")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/aluminium")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/coal")))
-				.add(Blocks.COAL_ORE)
-				.add(Blocks.DEEPSLATE_COAL_ORE)
+				.add(key(Blocks.COAL_ORE))
+				.add(key(Blocks.DEEPSLATE_COAL_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("minecraft:coal_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:coal_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/coal")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/copper")))
-				.add(Blocks.COPPER_ORE)
-				.add(Blocks.DEEPSLATE_COPPER_ORE)
+				.add(key(Blocks.COPPER_ORE))
+				.add(key(Blocks.DEEPSLATE_COPPER_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("minecraft:copper_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:copper_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/copper")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/diamond")))
-				.add(Blocks.DIAMOND_ORE)
-				.add(Blocks.DEEPSLATE_DIAMOND_ORE)
+				.add(key(Blocks.DIAMOND_ORE))
+				.add(key(Blocks.DEEPSLATE_DIAMOND_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("minecraft:diamond_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:diamond_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/diamond")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/emerald")))
-				.add(Blocks.EMERALD_ORE)
-				.add(Blocks.DEEPSLATE_EMERALD_ORE)
+				.add(key(Blocks.EMERALD_ORE))
+				.add(key(Blocks.DEEPSLATE_EMERALD_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("minecraft:emerald_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:emerald_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/emerald")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/gold")))
-				.add(Blocks.GOLD_ORE)
-				.add(Blocks.DEEPSLATE_GOLD_ORE)
+				.add(key(Blocks.GOLD_ORE))
+				.add(key(Blocks.DEEPSLATE_GOLD_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("minecraft:gold_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:gold_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/gold")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/iron")))
-				.add(Blocks.IRON_ORE)
-				.add(Blocks.DEEPSLATE_IRON_ORE)
+				.add(key(Blocks.IRON_ORE))
+				.add(key(Blocks.DEEPSLATE_IRON_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("minecraft:iron_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:iron_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/iron")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/lapis")))
-				.add(Blocks.LAPIS_ORE)
-				.add(Blocks.DEEPSLATE_LAPIS_ORE)
+				.add(key(Blocks.LAPIS_ORE))
+				.add(key(Blocks.DEEPSLATE_LAPIS_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("minecraft:lapis_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:lapis_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/lapis")));
@@ -70,7 +72,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:lead_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/lead")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/netherite_scrap")))
-				.add(Blocks.ANCIENT_DEBRIS)
+				.add(key(Blocks.ANCIENT_DEBRIS))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:netherite_scrap_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/netherite_scrap")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/nickel")))
@@ -83,17 +85,20 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:platinum_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/platinum")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/quartz")))
-				.add(Blocks.NETHER_QUARTZ_ORE)
+				.add(key(Blocks.NETHER_QUARTZ_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:quartz_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/quartz")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/redstone")))
-				.add(Blocks.REDSTONE_ORE)
-				.add(Blocks.DEEPSLATE_REDSTONE_ORE)
+				.add(key(Blocks.REDSTONE_ORE))
+				.add(key(Blocks.DEEPSLATE_REDSTONE_ORE))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:redstone_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/redstone")));
 		this.tag(TagKey.create(Registries.BLOCK, Identifier.parse("agricraft:ores/tin")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("c:tin_ores")))
 				.addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.parse("forge:ores/tin")));
 	}
-}
 
+	private static ResourceKey<Block> key(Block block) {
+		return block.builtInRegistryHolder().key();
+	}
+}
